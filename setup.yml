@@ -1,7 +1,18 @@
 ---
 - hosts: all
   tasks:
-    - name: install desktop packages
-      apt: pkg=ubuntu-desktop
-    - name: install audio packages
-      apt: pkg=audacity,git,sox
+    - name: set hostname
+      copy: content=publishingstudio.declinefm.com dest=/etc/hostname
+    - name: install necessary packages
+      apt: pkg=ubuntu-desktop,audacity,git,sox,vlc,lame,libid3-tools
+    - name: remove undesirable packages
+      apt: pkg=totem,rhythmbox state=absent
+# the initial password is simply 'password', lowercase
+    - name: create group ubuntu
+      group: name=ubuntu
+    - name: create user ubuntu
+      user: name=ubuntu group=ubuntu groups=admin update_password=on_create password=$1$SomeSalt$/jbIwfYCu0MxPBND2EtRH.
+    - name: clone studio repository
+      git: repo=https://github.com/Rudd-O/studio dest=/usr/local/studio
+    - name: wire repository up into path
+      copy: src=files/studio.sh dest=/etc/profile.d/studio.sh

@@ -7,8 +7,10 @@ set -e
 
 unset cleanup_lodev
 unset cleanup_mountpoint
+unset cleanup_fake
 cleanup() {
     [ -n "$NOCLEANUP" ] && exit || true
+    [ -z "$cleanup_fake" ] || sudo rm -rf "$cleanup_fake"
     [ -z "$cleanup_mountpoint" ] || sudo umount "$cleanup_mountpoint"
     [ -z "$cleanup_lodev" ] || sudo losetup -d "$cleanup_lodev"
 }
@@ -94,8 +96,16 @@ popd
 sudo rm -f "$targetdir"/partition1/etc/resolv.conf
 sudo cp /etc/resolv.conf "$targetdir"/partition1/etc/resolv.conf
 
+#fool system into believing that shit exists
+cleanup_fake="$targetdir"/fake
+for a in initctl invoke-rc.d restart start stop start-stop-daemon service ; do
+    sudo mkdir -p "$targetdir"/fake
+    echo "#/bin/bash" | sudo tee "$targetdir"/fake/$a
+    sudo chmod +x "$targetdir"/fake/$a
+done
+
 #fire ansible up
-sudo ansible-playbook -c chroot -i "$targetdir"/partition1, "$DIR"/setup.yml
+sudo ANSIBLE_NOCOWS=1 PATH=/fake:/usr/local/sbin:/usr/sbin:/sbin:/usr/local/bin:/usr/bin:/bin ansible-playbook -c chroot -i "$targetdir"/partition1, "$DIR"/setup.yml
 
 #restore networking in chroot
 sudo ln -sf ../run/resolvconf/etc/resolv.conf "$targetdir"/partition1/etc/resolv.conf
