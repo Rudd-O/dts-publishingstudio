@@ -6,7 +6,7 @@
     - name: install necessary packages
       apt: pkg=ubuntu-desktop,audacity,git,sox,vlc,lame,libid3-tools,sonic-visualiser
     - name: remove undesirable packages
-      apt: pkg=totem,rhythmbox state=absent
+      apt: pkg=totem,rhythmbox,openssh-server state=absent
 # the initial password is simply 'password', lowercase
     - name: create group ubuntu
       group: name=ubuntu
