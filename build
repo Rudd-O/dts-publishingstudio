@@ -1,5 +1,8 @@
 #!/bin/bash
 
+unset CDPATH
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
 set -e
 set -x
 
@@ -17,3 +20,4 @@ wget -c http://cloud-images.ubuntu.com/releases/13.10/release/ubuntu-13.10-serve
 
 popd
 
+source "$DIR"/ansible/hacking/env-setup
