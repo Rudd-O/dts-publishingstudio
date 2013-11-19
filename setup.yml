@@ -18,3 +18,5 @@
       copy: src=files/studio.sh dest=/etc/profile.d/studio.sh
     - name: create swap files
       shell: creates=/var/swap dd if=/dev/zero of=/var/swap bs=1M count=0 seek=2048 && chmod 700 /var/swap && mkswap /var/swap
+    - name: add swap file to fstab
+      lineinfile: dest=/etc/fstab regexp=^/var/swap line='/var/swap none swap defaults 0 0'
