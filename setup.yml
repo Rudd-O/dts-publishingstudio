@@ -1,7 +1,7 @@
 ---
 - hosts: all
   tasks:
-    - name: echo something to temp
-      shell: echo Yaaayy >/foobar.txt
-    - name: install packages
+    - name: install desktop packages
+      apt: pkg=ubuntu-desktop
+    - name: install audio packages
       apt: pkg=audacity,git,sox
