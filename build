@@ -75,7 +75,13 @@ fi
 cleanup_lodev="$lodev"
 
 #resize partitions
-sudo resize2fs "$lodev"p1
+if test -d partition1 ; then
+    if ! mountpoint partition1 ; then
+        # do NOT do this if the file system is mounted
+        sudo e2fsck -f "$lodev"p1
+        sudo resize2fs "$lodev"p1
+    fi
+fi
 
 #mount partitions
 mkdir -p partition1
