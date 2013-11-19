@@ -4,3 +4,13 @@ set -e
 set -x
 
 targetdir="$1"
+
+[ -n "$targetdir" ] || {
+    echo "usage: build <outputdir>" >&2
+    exit 64
+}
+
+cd "$targetdir"
+
+wget -c http://cloud-images.ubuntu.com/releases/13.10/release/ubuntu-13.10-server-cloudimg-amd64-disk1.img
+wget -c http://cloud-images.ubuntu.com/releases/13.10/release/ubuntu-13.10-server-cloudimg-amd64.ovf
