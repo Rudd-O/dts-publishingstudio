@@ -4,7 +4,14 @@ unset CDPATH
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 set -e
-set -x
+
+unset cleanup_lodev
+unset cleanup_mountpoint
+cleanup() {
+    [ -z "$cleanup_mountpoint" ] || sudo umount "$cleanup_mountpoint"
+    [ -z "$cleanup_lodev" ] || sudo losetup -d "$cleanup_lodev"
+}
+trap cleanup EXIT
 
 targetdir="$1"
 
@@ -15,9 +22,35 @@ targetdir="$1"
 
 pushd "$targetdir"
 
+#download
 wget -c http://cloud-images.ubuntu.com/releases/13.10/release/ubuntu-13.10-server-cloudimg-amd64-disk1.img
 wget -c http://cloud-images.ubuntu.com/releases/13.10/release/ubuntu-13.10-server-cloudimg-amd64.ovf
 
+#conversion to raw
+if [ ! -f ubuntu-13.10-server-cloudimg-amd64-disk1.raw ] ; then
+    qemu-img convert -O raw ubuntu-13.10-server-cloudimg-amd64-disk1.img ubuntu-13.10-server-cloudimg-amd64-disk1.raw
+fi
+
+#mapping to loopback dev
+lodev=`
+losetup -l | python -c '
+import sys
+stuffs = dict([ (l[41:-1],l[0:10]) for l in sys.stdin.readlines()[1:] ])
+if sys.argv[1] in stuffs:
+    print stuffs[sys.argv[1]]
+' "$PWD"/ubuntu-13.10-server-cloudimg-amd64-disk1.raw
+`
+if [ -z "$lodev" ] ; then
+    lodev=`sudo losetup -P --find --show "$PWD"/ubuntu-13.10-server-cloudimg-amd64-disk1.raw`
+fi
+cleanup_lodev="$lodev"
+
+#mount partitions
+mkdir -p partition1
+mountpoint partition1 || sudo mount "$lodev"p1 partition1
+cleanup_mountpoint="$PWD"/partition1
+
 popd
 
+#prepare to run ansible
 source "$DIR"/ansible/hacking/env-setup

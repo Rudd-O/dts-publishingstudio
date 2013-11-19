@@ -1,0 +1,7 @@
+Build requirements
+------------------
+
+- Python
+- wget
+- qemu-img
+- losetup
