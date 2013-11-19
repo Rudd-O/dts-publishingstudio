@@ -53,5 +53,12 @@ cleanup_mountpoint="$PWD"/partition1
 
 popd
 
+#setup networking in chroot
+sudo rm -f "$targetdir"/partition1/etc/resolv.conf
+sudo cp /etc/resolv.conf "$targetdir"/partition1/etc/resolv.conf
+
 #fire ansible up
 sudo ansible-playbook -c chroot -i "$targetdir"/partition1, "$DIR"/setup.yml
+
+#restore networking in chroot
+sudo ln -sf ../run/resolvconf/etc/resolv.conf "$targetdir"/partition1/etc/resolv.conf
