@@ -8,6 +8,7 @@ set -e
 unset cleanup_lodev
 unset cleanup_mountpoint
 cleanup() {
+    [ -n "$NOCLEANUP" ] && exit || true
     [ -z "$cleanup_mountpoint" ] || sudo umount "$cleanup_mountpoint"
     [ -z "$cleanup_lodev" ] || sudo losetup -d "$cleanup_lodev"
 }
@@ -52,5 +53,5 @@ cleanup_mountpoint="$PWD"/partition1
 
 popd
 
-#prepare to run ansible
-source "$DIR"/ansible/hacking/env-setup
+#fire ansible up
+sudo ansible-playbook -c chroot -i "$targetdir"/partition1, "$DIR"/setup.yml

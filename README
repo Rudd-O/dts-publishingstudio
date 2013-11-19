@@ -5,3 +5,4 @@ Build requirements
 - wget
 - qemu-img
 - losetup
+- ansible

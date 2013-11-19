@@ -1,0 +1,5 @@
+---
+- hosts: all
+  tasks:
+    - name: echo something to temp
+      shell: echo Yaaayy >/foobar.txt
