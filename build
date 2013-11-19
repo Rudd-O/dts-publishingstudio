@@ -23,7 +23,7 @@ targetdir="$1"
     exit 64
 }
 
-pushd "$targetdir"
+pushd "$targetdir" > /dev/null
 
 #download
 wget --no-verbose -c https://cloud-images.ubuntu.com/releases/13.10/release/ubuntu-13.10-server-cloudimg-amd64-disk1.img
@@ -78,7 +78,7 @@ cleanup_lodev="$lodev"
 
 #resize partitions
 if test -d partition1 ; then
-    if ! mountpoint partition1 ; then
+    if ! mountpoint -q partition1 ; then
         # do NOT do this if the file system is mounted
         sudo e2fsck -f "$lodev"p1
         sudo resize2fs "$lodev"p1
@@ -87,10 +87,10 @@ fi
 
 #mount partitions
 mkdir -p partition1
-mountpoint partition1 || sudo mount "$lodev"p1 partition1
+mountpoint -q partition1 || sudo mount "$lodev"p1 partition1
 cleanup_mountpoint="$PWD"/partition1
 
-popd
+popd > /dev/null
 
 #setup networking in chroot
 sudo rm -f "$targetdir"/partition1/etc/resolv.conf
@@ -100,7 +100,7 @@ sudo cp /etc/resolv.conf "$targetdir"/partition1/etc/resolv.conf
 cleanup_fake="$targetdir"/fake
 for a in initctl invoke-rc.d restart start stop start-stop-daemon service ; do
     sudo mkdir -p "$targetdir"/fake
-    echo "#/bin/bash" | sudo tee "$targetdir"/fake/$a
+    echo "#/bin/bash" | sudo tee "$targetdir"/fake/$a > /dev/null
     sudo chmod +x "$targetdir"/fake/$a
 done
 
