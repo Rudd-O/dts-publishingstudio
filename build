@@ -74,6 +74,9 @@ if [ -z "$lodev" ] ; then
 fi
 cleanup_lodev="$lodev"
 
+#resize partitions
+sudo resize2fs "$lodev"p1
+
 #mount partitions
 mkdir -p partition1
 mountpoint partition1 || sudo mount "$lodev"p1 partition1
