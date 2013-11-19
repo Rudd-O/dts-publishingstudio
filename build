@@ -10,7 +10,10 @@ targetdir="$1"
     exit 64
 }
 
-cd "$targetdir"
+pushd "$targetdir"
 
 wget -c http://cloud-images.ubuntu.com/releases/13.10/release/ubuntu-13.10-server-cloudimg-amd64-disk1.img
 wget -c http://cloud-images.ubuntu.com/releases/13.10/release/ubuntu-13.10-server-cloudimg-amd64.ovf
+
+popd
+
