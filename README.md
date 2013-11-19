@@ -6,7 +6,7 @@ The Decline to State crew created this project with the intention of completely 
 
 At some point we plan to open up our show publishing tutorial as well.
 
-#Software included in the built image
+##Software included in the built image
 
 - Audacity
 - VLC
@@ -15,7 +15,7 @@ At some point we plan to open up our show publishing tutorial as well.
 - GStreamer
 - id3tag
 
-#Build requirements
+##Build requirements
 
 The following software is required in the computer running the programs included in this project:
 
@@ -26,11 +26,12 @@ The following software is required in the computer running the programs included
 - ansible
 - sudo
 
-#Build instructions
+##Build instructions
 
-1. Create an empty directory somewhere.
-2. Run the `./build <path to the new directory>` command.
+1. Change into the directory where you cloned this repository.
+2. Create an empty directory somewhere.
+3. Run the `./build <path to the new directory>` command.
 
-In that directory, the output OVA file will be present.
+In that directory, the output OVA file will be present when the process is done.
 
 The `build` command will run sudo which may require your root password, or sudo configuration to make it passwordless.  Ensure you do what's necessary to make it work.
