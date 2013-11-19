@@ -4,7 +4,7 @@
     - name: set hostname
       copy: content=publishingstudio.declinefm.com dest=/etc/hostname
     - name: install necessary packages
-      apt: pkg=ubuntu-desktop,audacity,git,sox,vlc,lame,libid3-tools
+      apt: pkg=ubuntu-desktop,audacity,git,sox,vlc,lame,libid3-tools,sonic-visualiser
     - name: remove undesirable packages
       apt: pkg=totem,rhythmbox state=absent
 # the initial password is simply 'password', lowercase
