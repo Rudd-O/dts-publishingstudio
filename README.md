@@ -15,6 +15,13 @@ At some point we plan to open up our show publishing tutorial as well.
 - GStreamer
 - id3tag
 
+##Description of the contents
+
+This project mainly contains two files:
+
+1. `build`.  This is the program that will download the original Ubuntu images, and set up the necessary low-level stuff to make the image programmable.  After these steps are done, ansible is invoked to run `setup.yml` on the image.  Once ansible is done, this program zips up the resulting files and creates the OVA file that can be run in VirtualBox.
+2. `setup.yml`.  This file describes to ansible all the operations that must be performed on the image to ready it up for usage.  Ansible follows the instructions in this file to prep the image for creation.
+
 ##Build requirements
 
 The following software is required in the computer running the programs included in this project:
