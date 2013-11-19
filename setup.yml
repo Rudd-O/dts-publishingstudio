@@ -3,3 +3,5 @@
   tasks:
     - name: echo something to temp
       shell: echo Yaaayy >/foobar.txt
+    - name: install packages
+      apt: pkg=audacity,git,sox
