@@ -20,3 +20,18 @@
       shell: creates=/var/swap dd if=/dev/zero of=/var/swap bs=1M count=0 seek=2048 && chmod 700 /var/swap && mkswap /var/swap
     - name: add swap file to fstab
       lineinfile: dest=/etc/fstab regexp=^/var/swap line='/var/swap none swap defaults 0 0'
+    - name: add ${item} directory to Nautilus bookmarks
+      lineinfile: owner=ubuntu group=ubuntu dest=/home/ubuntu/.gtk-bookmarks regexp='{{ item }}' line='sftp://ubuntu@studio.declinefm.com/home/ubuntu/Studio/{{ item }} {{ item }}' create=yes
+      with_items:
+        - Recordings
+        - Clips
+    - name: create .ssh directory
+      file: owner=ubuntu group=ubuntu dest=/home/ubuntu/.ssh state=directory mode=0700
+    - name: add studio to known_hosts
+      lineinfile: owner=ubuntu group=ubuntu dest=/home/ubuntu/.ssh/known_hosts create=yes mode=0600 regexp='studio.declinefm.com' line='studio.declinefm.com,184.73.165.116 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDoDZ789FU010XtTmqzn0E6aQUKH+gyykkLnoRUDn/l+oZY4T/S+ns7kuMzYiJvaMfyPCyQ5Jz57BAVXpoI/NQS/G6sNowMg+P3/i/QLRrm06pJK9hTjc1fiALtmcYn7FLCdM285s811Go0WA7gTW/Vn+ZgDSe5bEbnjQot4AfPSH2DTT5pYDsKhwIFi2CSjgI66c8prOdyrsy9a0j2zDyJ7NTj7JQ4EEisxEaKCE1L49VXVbIrcBBPpPqR9c8BzxgzPlR6uruZTqCG0lqFVEeN/3TqvpfNB/XmUiDC4cSrKIAASmb40Hiloo1TwFsjh4M7K655QmOCGeRYUzfJiX5r'
+    - name: deploy unity launcher icons
+      copy: src=files/reset-unity-launcher dest=/usr/local/bin/reset-unity-launcher mode=0755
+    - name: reset unity launcher icons
+      shell: sudo -H -u ubuntu /usr/local/bin/reset-unity-launcher
+      register: reset_launcher_icons
+      changed_when: reset_launcher_icons.stdout.find("configuration changed") != -1

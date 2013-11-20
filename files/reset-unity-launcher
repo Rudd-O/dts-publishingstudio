@@ -1,0 +1,30 @@
+#!/bin/bash
+
+set -e
+updated=
+
+cleanup() {
+    [ -n "$DBUS_SESSION_BUS_PID" ] || return
+    killed=
+    kill $DBUS_SESSION_BUS_PID
+    for a in `seq 5` ; do
+        kill -0 $DBUS_SESSION_BUS_PID 2>/dev/null || { killed=true ; break ; }
+        sleep 1
+    done
+    [ -n "$killed" ] || kill -9 $DBUS_SESSION_BUS_PID
+}
+trap cleanup EXIT
+
+eval `dbus-launch`
+export DBUS_SESSION_BUS_ADDRESS
+
+if gsettings get com.canonical.Unity.Launcher favorites | grep -q audacity ; then
+    true # nothing to do
+else
+    gsettings set com.canonical.Unity.Launcher favorites "['application://nautilus.desktop', 'application://firefox.desktop', 'application://ubuntu-software-center.desktop', 'application://gnome-control-center.desktop', 'application://gnome-terminal.desktop', 'application://audacity.desktop']"
+    updated=yes
+fi
+
+if [ -n "$updated" ] ; then
+    echo "configuration changed"
+fi
