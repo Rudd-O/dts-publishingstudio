@@ -97,11 +97,11 @@ sudo rm -f "$targetdir"/partition1/etc/resolv.conf
 sudo cp /etc/resolv.conf "$targetdir"/partition1/etc/resolv.conf
 
 #fool system into believing that shit exists
-cleanup_fake="$targetdir"/fake
+cleanup_fake="$targetdir"/partition1/fake
 for a in initctl invoke-rc.d restart start stop start-stop-daemon service ; do
-    sudo mkdir -p "$targetdir"/fake
-    echo "#/bin/bash" | sudo tee "$targetdir"/fake/$a > /dev/null
-    sudo chmod +x "$targetdir"/fake/$a
+    sudo mkdir -p "$cleanup_fake"
+    echo "#/bin/bash" | sudo tee "$cleanup_fake"/$a > /dev/null
+    sudo chmod +x "$cleanup_fake"/$a
 done
 
 #fire ansible up
