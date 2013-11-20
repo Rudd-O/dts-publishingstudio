@@ -26,8 +26,8 @@ targetdir="$1"
 pushd "$targetdir" > /dev/null
 
 #download
-wget --no-verbose -c https://cloud-images.ubuntu.com/releases/13.10/release/ubuntu-13.10-server-cloudimg-amd64-disk1.img
-wget --no-verbose -c http://cloud-images.ubuntu.com/releases/13.10/release/ubuntu-13.10-server-cloudimg-amd64.ovf
+wget -c --progress=bar https://cloud-images.ubuntu.com/releases/13.10/release/ubuntu-13.10-server-cloudimg-amd64-disk1.img
+wget -c --progress=bar http://cloud-images.ubuntu.com/releases/13.10/release/ubuntu-13.10-server-cloudimg-amd64.ovf
 
 #conversion to raw
 if [ ! -f ubuntu-13.10-server-cloudimg-amd64-disk1.raw ] ; then
