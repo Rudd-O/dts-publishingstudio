@@ -13,7 +13,7 @@
       <Description>The bridged network</Description>
     </Network>
   </NetworkSection>
-  <VirtualSystem ovf:id="vm">
+  <VirtualSystem ovf:id="dts-publishingstudio">
     <Info>DTS publishing studio</Info>
     <Name>Ubuntu</Name>
     <OperatingSystemSection ovf:id="93">
@@ -21,7 +21,7 @@
     </OperatingSystemSection>
     <ProductSection>
       <Info>Cloud-Init customization</Info>
-      <Product>13.10 (Saucy Salamander) Server</Product>
+      <Product>Decline to State publishing studio based on 13.10 (Saucy Salamander) Server</Product>
       <Property ovf:key="instance-id" ovf:type="string" ovf:userConfigurable="true" ovf:value="dts-ovf">
           <Label>A Unique Instance ID for this instance</Label>
           <Description>Specifies the instance id.  This is required and used to determine if the machine should take "first boot" actions</Description>
