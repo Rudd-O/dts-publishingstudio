@@ -186,7 +186,7 @@ EOF
 
 #tar it all up
 cleanup_bad_ova="$PWD"/dts-publishingstudio-13.10-amd64.ova.xz
-tar cv dts-publishingstudio-13.10-amd64.ovf dts-publishingstudio-13.10-amd64.mf dts-publishingstudio-13.10-amd64-disk1.img | xz -F xz > dts-publishingstudio-13.10-amd64.ova.xz
+tar cv dts-publishingstudio-13.10-amd64.ovf dts-publishingstudio-13.10-amd64.mf dts-publishingstudio-13.10-amd64-disk1.img | pxz -cv - > dts-publishingstudio-13.10-amd64.ova.xz
 cleanup_bad_ova=
 
 cleanup_original_image="$targetdir"/ubuntu-13.10-server-cloudimg-amd64-disk1.img
