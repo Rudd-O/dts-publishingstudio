@@ -32,7 +32,7 @@ The following software is required in the computer running the programs included
 - losetup
 - ansible
 - sudo
-- pigz
+- xz
 - zerofree
 
 ##Build instructions
