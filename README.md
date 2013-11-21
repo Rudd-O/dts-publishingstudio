@@ -32,6 +32,8 @@ The following software is required in the computer running the programs included
 - losetup
 - ansible
 - sudo
+- pigz
+- zerofree
 
 ##Build instructions
 
@@ -39,6 +41,6 @@ The following software is required in the computer running the programs included
 2. Create an empty directory somewhere.
 3. Run the `./build <path to the new directory>` command.
 
-In that directory, the output OVA file will be present when the process is done.
+In that directory, the output OVA file will be present when the process is done.  It will be named `dts-publishingstudio-<XX>.<YY>-amd64.ova`.
 
 The `build` command will run sudo which may require your root password, or sudo configuration to make it passwordless.  Ensure you do what's necessary to make it work.

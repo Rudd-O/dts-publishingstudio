@@ -5,14 +5,48 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 set -e
 
-unset cleanup_lodev
 unset cleanup_mountpoint
-unset cleanup_fake
+unset cleanup_partition1
+unset cleanup_lodev
+unset cleanup_bad_ova
+unset cleanup_dest_img
+unset cleanup_ovf
+unset cleanup_original_image
+unset cleanup_created_image
 cleanup() {
-    [ -n "$NOCLEANUP" ] && exit || true
-    [ -z "$cleanup_fake" ] || sudo rm -rf "$cleanup_fake"
-    [ -z "$cleanup_mountpoint" ] || sudo umount "$cleanup_mountpoint"
-    [ -z "$cleanup_lodev" ] || sudo losetup -d "$cleanup_lodev"
+    [ -n "$NOCLEANUP" -a "$1" != "force" ] && exit || true
+    [ -z "$cleanup_mountpoint" ] || {
+        sudo umount "$cleanup_mountpoint"
+        unset cleanup_mountpoint
+    }
+    [ -z "$cleanup_partition1" ] || {
+        sudo rmdir "$cleanup_partition1"
+        unset cleanup_partition1
+    }
+    [ -z "$cleanup_lodev" ] || {
+        sudo losetup -d "$cleanup_lodev"
+        unset cleanup_lodev
+    }
+    [ -z "$cleanup_bad_ova" ] || {
+        sudo rm -f "$cleanup_bad_ova"
+        unset cleanup_bad_ova
+    }
+    [ -z "$cleanup_dest_img" ] || {
+        sudo rm -f "$cleanup_dest_img"
+        unset cleanup_dest_img
+    }
+    [ -z "$cleanup_ovf" ] || {
+        sudo rm -f "$cleanup_ovf"
+        unset cleanup_ovf
+    }
+    [ -z "$cleanup_original_image" ] || {
+        sudo rm -f "$cleanup_original_image"
+        unset cleanup_original_image
+    }
+    [ -z "$cleanup_created_image" ] || {
+        sudo rm -f "$cleanup_created_image"
+        unset cleanup_created_image
+    }
 }
 trap cleanup EXIT
 
@@ -26,8 +60,9 @@ targetdir="$1"
 pushd "$targetdir" > /dev/null
 
 #download
-wget -c --progress=bar https://cloud-images.ubuntu.com/releases/13.10/release/ubuntu-13.10-server-cloudimg-amd64-disk1.img
-wget -c --progress=bar http://cloud-images.ubuntu.com/releases/13.10/release/ubuntu-13.10-server-cloudimg-amd64.ovf
+if [ ! -f ubuntu-13.10-server-cloudimg-amd64-disk1.raw ] ; then
+    wget -c --progress=bar https://cloud-images.ubuntu.com/releases/13.10/release/ubuntu-13.10-server-cloudimg-amd64-disk1.img
+fi
 
 #conversion to raw
 if [ ! -f ubuntu-13.10-server-cloudimg-amd64-disk1.raw ] ; then
@@ -87,6 +122,7 @@ fi
 
 #mount partitions
 mkdir -p partition1
+cleanup_partition1="$PWD"/partition1
 mountpoint -q partition1 || sudo mount "$lodev"p1 partition1
 cleanup_mountpoint="$PWD"/partition1
 
@@ -109,3 +145,33 @@ sudo ANSIBLE_NOCOWS=1 PATH=/fake:/usr/local/sbin:/usr/sbin:/sbin:/usr/local/bin:
 
 #restore networking in chroot
 sudo ln -sf ../run/resolvconf/etc/resolv.conf "$targetdir"/partition1/etc/resolv.conf
+
+#unmount the filesystem
+sudo umount "$cleanup_mountpoint"
+unset cleanup_mountpoint
+
+#zerofree the partition image
+sudo zerofree -v "$lodev"p1
+
+#cleanup everything
+cleanup force
+
+#copy the OVF
+cp "$DIR"/dts-publishingstudio-13.10-amd64.ovf "$targetdir"
+cleanup_ovf="$targetdir"/dts-publishingstudio-13.10-amd64.ovf
+
+pushd "$targetdir" > /dev/null
+
+#create image
+cleanup_dest_img="$PWD"/dts-publishingstudio-13.10-amd64-disk1.img
+qemu-img convert -S 512 -O qcow2 ubuntu-13.10-server-cloudimg-amd64-disk1.raw dts-publishingstudio-13.10-amd64-disk1.img
+
+#tar it all up
+cleanup_bad_ova="$PWD"/dts-publishingstudio-13.10-amd64.ova
+tar cv dts-publishingstudio-13.10-amd64-disk1.img dts-publishingstudio-13.10-amd64.ovf | pigz -9 -c > dts-publishingstudio-13.10-amd64.ova
+cleanup_bad_ova=
+
+cleanup_original_image="$targetdir"/ubuntu-13.10-server-cloudimg-amd64-disk1.img
+cleanup_created_image="$targetdir"/ubuntu-13.10-server-cloudimg-amd64-disk1.raw
+
+popd
