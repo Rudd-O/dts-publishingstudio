@@ -26,8 +26,13 @@
         - Studio
         - Studio/Recordings
         - Studio/Clips
-    - name: add ${item} directory to Nautilus bookmarks
-      lineinfile: owner=ubuntu group=ubuntu dest=/home/ubuntu/.gtk-bookmarks regexp='{{ item }}' line='sftp://ubuntu@studio.declinefm.com/home/ubuntu/Studio/{{ item }} {{ item }}' create=yes
+    - name: add ${item} local directory to Nautilus bookmarks
+      lineinfile: owner=ubuntu group=ubuntu dest=/home/ubuntu/.gtk-bookmarks regexp='Local {{ item }}' line='file:///home/ubuntu/Studio/{{ item }} Local {{ item }}' create=yes
+      with_items:
+        - Recordings
+        - Clips
+    - name: add ${item} remote directory to Nautilus bookmarks
+      lineinfile: owner=ubuntu group=ubuntu dest=/home/ubuntu/.gtk-bookmarks regexp='Server {{ item }}' line='sftp://ubuntu@studio.declinefm.com/home/ubuntu/Studio/{{ item }} Server {{ item }}' create=yes
       with_items:
         - Recordings
         - Clips
