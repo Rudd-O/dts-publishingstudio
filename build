@@ -133,7 +133,7 @@ popd > /dev/null
 
 #setup networking in chroot
 sudo rm -f "$targetdir"/partition1/etc/resolv.conf
-sudo cp /etc/resolv.conf "$targetdir"/partition1/etc/resolv.conf
+sudo cp -f /etc/resolv.conf "$targetdir"/partition1/etc/resolv.conf
 
 #fool system into believing that shit exists
 fakedir="$targetdir"/partition1/fake
@@ -163,7 +163,7 @@ sudo zerofree -v "$lodev"p1
 cleanup force
 
 #copy the OVF
-cp "$DIR"/dts-publishingstudio-13.10-amd64.ovf "$targetdir"
+cp -f "$DIR"/dts-publishingstudio-13.10-amd64.ovf "$targetdir"
 cleanup_ovf="$targetdir"/dts-publishingstudio-13.10-amd64.ovf
 
 pushd "$targetdir" > /dev/null
