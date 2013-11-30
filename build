@@ -162,6 +162,11 @@ sudo zerofree -v "$lodev"p1
 #cleanup everything
 cleanup force
 
+if [ -z "$NOZEROFREE" ] ; then
+    #zerofree the partition image
+    sudo zerofree -v "$lodev"p1
+fi
+
 #copy the OVF
 cp -f "$DIR"/dts-publishingstudio-13.10-amd64.ovf "$targetdir"
 cleanup_ovf="$targetdir"/dts-publishingstudio-13.10-amd64.ovf
