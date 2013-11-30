@@ -216,8 +216,8 @@ rm -f dts-publishingstudio-13.10-amd64-disk1.vmdk
 vboxmanage clonehd --format=VMDK --variant=Stream dts-publishingstudio-13.10-amd64-disk1.sparsevmdk dts-publishingstudio-13.10-amd64-disk1.vmdk
 chmod 644 dts-publishingstudio-13.10-amd64-disk1.vmdk
 
-ovfsum=`sha256sum dts-publishingstudio-13.10-amd64.ovf | cut -d ' ' -f 3`
-imgsum=`sha256sum dts-publishingstudio-13.10-amd64-disk1.vmdk | cut -d ' ' -f 3`
+ovfsum=`sha256sum dts-publishingstudio-13.10-amd64.ovf | cut -d ' ' -f 1`
+imgsum=`sha256sum dts-publishingstudio-13.10-amd64-disk1.vmdk | cut -d ' ' -f 1`
 
 #generate manifest for extra anti-tampering goodness
 cleanup_mf="$PWD"/dts-publishingstudio-13.10-amd64.mf
