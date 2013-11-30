@@ -13,8 +13,8 @@
       <Description>The bridged network</Description>
     </Network>
   </NetworkSection>
-  <VirtualSystem ovf:id="dts-publishingstudio">
-    <Info>DTS publishing studio</Info>
+  <VirtualSystem ovf:id="Publishing studio">
+    <Info>Decline to State publishing studio</Info>
     <Name>Ubuntu</Name>
     <OperatingSystemSection ovf:id="93">
       <Info>13.10 (Saucy Salamander) Server</Info>

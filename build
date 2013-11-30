@@ -6,6 +6,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 set -e
 
 unset cleanup_kernels
+unset cleanup_mountpoint_proc
 unset cleanup_mountpoint
 unset cleanup_partition1
 unset cleanup_lodev
@@ -19,51 +20,65 @@ unset cleanup_mf
 cleanup() {
     [ -n "$NOCLEANUP" -a "$1" != "force" ] && exit || true
     [ -z "$cleanup_kernels" ] || {
-        sudo rm -rf "$cleanup_kernels"
+        rm -rf "$cleanup_kernels"
         unset cleanup_kernels
     }
+    [ -z "$cleanup_mountpoint_proc" ] || {
+        umount "$cleanup_mountpoint_proc"
+        unset cleanup_mountpoint_proc
+    }
     [ -z "$cleanup_mountpoint" ] || {
-        sudo umount "$cleanup_mountpoint"
+        umount "$cleanup_mountpoint"
         unset cleanup_mountpoint
     }
     [ -z "$cleanup_partition1" ] || {
-        sudo rmdir "$cleanup_partition1"
+        rmdir "$cleanup_partition1"
         unset cleanup_partition1
     }
     [ -z "$cleanup_lodev" ] || {
-        sudo losetup -d "$cleanup_lodev"
+        losetup -d "$cleanup_lodev"
         unset cleanup_lodev
     }
     [ -z "$cleanup_bad_ova" ] || {
-        sudo rm -f "$cleanup_bad_ova"
+        rm -f "$cleanup_bad_ova"
         unset cleanup_bad_ova
     }
     [ -z "$cleanup_dest_img" ] || {
-        sudo rm -f "$cleanup_dest_img"
+        rm -f "$cleanup_dest_img"
         unset cleanup_dest_img
     }
     [ -z "$cleanup_sparse_img" ] || {
-        sudo rm -f "$cleanup_sparse_img"
+        rm -f "$cleanup_sparse_img"
         unset cleanup_sparse_img
     }
     [ -z "$cleanup_ovf" ] || {
-        sudo rm -f "$cleanup_ovf"
+        rm -f "$cleanup_ovf"
         unset cleanup_ovf
     }
     [ -z "$cleanup_original_image" ] || {
-        sudo rm -f "$cleanup_original_image"
+        rm -f "$cleanup_original_image"
         unset cleanup_original_image
     }
     [ -z "$cleanup_created_image" ] || {
-        sudo rm -f "$cleanup_created_image"
+        rm -f "$cleanup_created_image"
         unset cleanup_created_image
     }
     [ -z "$cleanup_mf" ] || {
-        sudo rm -f "$cleanup_mf"
+        rm -f "$cleanup_mf"
         unset cleanup_mf
     }
 }
 trap cleanup EXIT
+
+chkdsk() {
+    retval=0 ; e2fsck -f "$lodev"p1 || retval=$?
+    if [ "$retval" == "0" -o "$retval" == "1" -o "$retval" == "2" -o "$retval" == "3" ] ; then
+        return 0
+    else
+        return "$retval"
+    fi
+    return 0
+}
 
 targetdir="$1"
 
@@ -98,7 +113,7 @@ f.close()
 fi
 
 #growth of the enclosing partition
-if echo p | sudo fdisk ubuntu-13.10-server-cloudimg-amd64-disk1.raw | grep -q $lastsector ; then
+if echo p | fdisk ubuntu-13.10-server-cloudimg-amd64-disk1.raw | grep -q $lastsector ; then
     true
 else
     echo '
@@ -109,7 +124,7 @@ p
 
 
 w
-' | sudo fdisk ubuntu-13.10-server-cloudimg-amd64-disk1.raw
+' | fdisk ubuntu-13.10-server-cloudimg-amd64-disk1.raw
 fi
 
 #mapping to loopback dev
@@ -122,45 +137,47 @@ if sys.argv[1] in stuffs:
 ' "$PWD"/ubuntu-13.10-server-cloudimg-amd64-disk1.raw
 `
 if [ -z "$lodev" ] ; then
-    lodev=`sudo losetup -P --find --show "$PWD"/ubuntu-13.10-server-cloudimg-amd64-disk1.raw`
+    lodev=`losetup -P --find --show "$PWD"/ubuntu-13.10-server-cloudimg-amd64-disk1.raw`
 fi
 cleanup_lodev="$lodev"
 
 #resize partitions
 if ! mountpoint -q partition1 ; then
         # do NOT do this if the file system is mounted
-        sudo e2fsck -f "$lodev"p1
-        sudo resize2fs "$lodev"p1
+        chkdsk "$lodev"p1
+        resize2fs "$lodev"p1
 fi
 
 #mount partitions
 mkdir -p partition1
 cleanup_partition1="$PWD"/partition1
-mountpoint -q partition1 || sudo mount "$lodev"p1 partition1
+mountpoint -q partition1 || mount "$lodev"p1 partition1
 cleanup_mountpoint="$PWD"/partition1
+mountpoint -q partition1/proc || mount -t proc proc partition1/proc
+cleanup_mountpoint_proc="$PWD"/partition1/proc
 
 popd > /dev/null
 
 #setup networking in chroot
-sudo rm -f "$cleanup_mountpoint"/etc/resolv.conf
-sudo cp -f /etc/resolv.conf "$cleanup_mountpoint"/etc/resolv.conf
+mv -f "$cleanup_mountpoint"/etc/resolv.conf "$cleanup_mountpoint"/etc/resolv.conf.original
+cp -f /etc/resolv.conf "$cleanup_mountpoint"/etc/resolv.conf
 
 #fool system into believing that shit exists
 fakedir="$cleanup_mountpoint"/fake
-sudo mkdir -p "$fakedir"
+mkdir -p "$fakedir"
 for a in initctl invoke-rc.d restart start stop start-stop-daemon service ; do
-    echo "#/bin/bash" | sudo tee "$fakedir"/$a > /dev/null
-    sudo chmod +x "$fakedir"/$a
+    echo "#/bin/bash" | tee "$fakedir"/$a > /dev/null
+    chmod +x "$fakedir"/$a
 done
 
 #fire ansible up
-sudo ANSIBLE_NOCOWS=1 PATH=/fake:/usr/local/sbin:/usr/sbin:/sbin:/usr/local/bin:/usr/bin:/bin ansible-playbook -c chroot -i "$cleanup_mountpoint", "$DIR"/setup.yml
+ANSIBLE_NOCOWS=1 PATH=/fake:/usr/local/sbin:/usr/sbin:/sbin:/usr/local/bin:/usr/bin:/bin ansible-playbook -c chroot -i "$cleanup_mountpoint", "$DIR"/setup.yml
 
 #restore networking in chroot
-sudo ln -sf ../run/resolvconf/etc/resolv.conf "$cleanup_mountpoint"/etc/resolv.conf
+cp -Rf "$cleanup_mountpoint"/etc/resolv.conf.original "$cleanup_mountpoint"/etc/resolv.conf
 
 #cleanup the fake stuff
-sudo rm -rf "$fakedir"
+rm -rf "$fakedir"
 
 #get the kernel and initrd out
 mkdir -p "$targetdir"/kernels
@@ -185,11 +202,11 @@ grub-install /dev/sda
 update-grub
 rm -f /installbootloader
 sync
-mount / -o remount,ro
-sync
 echo 1 > /proc/sys/kernel/sysrq
+echo u > /proc/sysrq-trigger
+sync
 echo o > /proc/sysrq-trigger
-sleep 5
+sleep 1
 echo cannot power off VM.  Please kill -15 this qemu process.
 EOF
 chmod +x "$cleanup_mountpoint"/installbootloader
@@ -208,10 +225,11 @@ unset savedshit2
 #install bootloader
 vmuuid=`python -c 'import uuid; print str(uuid.uuid1())'`
 qemu-system-x86_64 -enable-kvm -name dts-publishingstudio -M pc-1.2 -no-reboot -m 512 -uuid "$vmuuid" -kernel "$cleanup_kernels"/"$kernel" -initrd "$cleanup_kernels"/"$initrd" -append "root=/dev/sda1 ro init=/installbootloader console=ttyS0" -drive file="$lodev",if=none,id=drive-ide0-0-0,format=raw -device ide-hd,bus=ide.0,unit=0,drive=drive-ide0-0-0,id=ide0-0-0,bootindex=1 -nographic -serial /dev/stdout
+chkdsk "$lodev"p1
 
 if [ -z "$NOZEROFREE" ] ; then
     #zerofree the partition image
-    sudo zerofree -v "$lodev"p1
+    zerofree -v "$lodev"p1
 fi
 
 #copy the OVF
@@ -230,14 +248,14 @@ rm -f dts-publishingstudio-13.10-amd64-disk1.vmdk
 vboxmanage clonehd --format=VMDK --variant=Stream dts-publishingstudio-13.10-amd64-disk1.sparsevmdk dts-publishingstudio-13.10-amd64-disk1.vmdk
 chmod 644 dts-publishingstudio-13.10-amd64-disk1.vmdk
 
-ovfsum=`sha256sum dts-publishingstudio-13.10-amd64.ovf | cut -d ' ' -f 1`
-imgsum=`sha256sum dts-publishingstudio-13.10-amd64-disk1.vmdk | cut -d ' ' -f 1`
+ovfsum=`sha1sum dts-publishingstudio-13.10-amd64.ovf | cut -d ' ' -f 1`
+imgsum=`sha1sum dts-publishingstudio-13.10-amd64-disk1.vmdk | cut -d ' ' -f 1`
 
 #generate manifest for extra anti-tampering goodness
 cleanup_mf="$PWD"/dts-publishingstudio-13.10-amd64.mf
 cat > dts-publishingstudio-13.10-amd64.mf << EOF
-SHA256 (dts-publishingstudio-13.10-amd64.ovf)= $ovfsum
-SHA256 (dts-publishingstudio-13.10-amd64-disk1.vmdk)= $imgsum
+SHA1 (dts-publishingstudio-13.10-amd64.ovf)= $ovfsum
+SHA1 (dts-publishingstudio-13.10-amd64-disk1.vmdk)= $imgsum
 EOF
 
 #tar it all up
