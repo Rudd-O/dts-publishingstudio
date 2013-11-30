@@ -34,6 +34,7 @@ The following software is required in the computer running the programs included
 - sudo
 - pxz
 - zerofree
+- VirtualBox
 
 ##Build instructions
 
