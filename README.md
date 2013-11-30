@@ -29,6 +29,7 @@ The following software is required in the computer running the programs included
 - Python
 - wget
 - qemu-img
+- QEMU proper
 - losetup
 - ansible
 - sudo

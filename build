@@ -5,10 +5,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 set -e
 
-unset cleanup_chroot_lodev
-unset cleanup_chroot_lodevp1
-unset cleanup_chroot_proc
-unset cleanup_chroot_sys
+unset cleanup_kernels
 unset cleanup_mountpoint
 unset cleanup_partition1
 unset cleanup_lodev
@@ -21,21 +18,9 @@ unset cleanup_created_image
 unset cleanup_mf
 cleanup() {
     [ -n "$NOCLEANUP" -a "$1" != "force" ] && exit || true
-    [ -z "$cleanup_chroot_lodevp1" ] || {
-        sudo rm -f "$cleanup_chroot_lodevp1"
-        unset cleanup_chroot_lodevp1
-    }
-    [ -z "$cleanup_chroot_lodev" ] || {
-        sudo rm -f "$cleanup_chroot_lodev"
-        unset cleanup_chroot_lodev
-    }
-    [ -z "$cleanup_chroot_proc" ] || {
-        sudo umount "$cleanup_chroot_proc"
-        unset cleanup_chroot_proc
-    }
-    [ -z "$cleanup_chroot_sys" ] || {
-        sudo umount "$cleanup_chroot_sys"
-        unset cleanup_chroot_sys
+    [ -z "$cleanup_kernels" ] || {
+        sudo rm -rf "$cleanup_kernels"
+        unset cleanup_kernels
     }
     [ -z "$cleanup_mountpoint" ] || {
         sudo umount "$cleanup_mountpoint"
@@ -157,43 +142,72 @@ cleanup_mountpoint="$PWD"/partition1
 popd > /dev/null
 
 #setup networking in chroot
-sudo rm -f "$targetdir"/partition1/etc/resolv.conf
-sudo cp -f /etc/resolv.conf "$targetdir"/partition1/etc/resolv.conf
+sudo rm -f "$cleanup_mountpoint"/etc/resolv.conf
+sudo cp -f /etc/resolv.conf "$cleanup_mountpoint"/etc/resolv.conf
 
 #fool system into believing that shit exists
-fakedir="$targetdir"/partition1/fake
+fakedir="$cleanup_mountpoint"/fake
 sudo mkdir -p "$fakedir"
 for a in initctl invoke-rc.d restart start stop start-stop-daemon service ; do
     echo "#/bin/bash" | sudo tee "$fakedir"/$a > /dev/null
     sudo chmod +x "$fakedir"/$a
 done
 
-# prepare to install grub
-cp -Rf "$lodev" "$cleanup_mountpoint"/dev/
-cleanup_chroot_lodev="$cleanup_mountpoint""$lodev"
-cp -Rf "$lodev"p1 "$cleanup_mountpoint"/dev/
-cleanup_chroot_lodevp1="$cleanup_mountpoint""$lodev"p1
-
-mountpoint -q "$cleanup_mountpoint"/proc || sudo mount -t proc proc "$cleanup_mountpoint"/proc
-cleanup_chroot_proc="$cleanup_mountpoint"/proc
-mountpoint -q "$cleanup_mountpoint"/sys || sudo mount -t sysfs sysfs "$cleanup_mountpoint"/sys
-cleanup_chroot_sys="$cleanup_mountpoint"/sys
-
 #fire ansible up
-sudo ANSIBLE_NOCOWS=1 PATH=/fake:/usr/local/sbin:/usr/sbin:/sbin:/usr/local/bin:/usr/bin:/bin ansible-playbook --extra-vars "boot_device=$lodev" -c chroot -i "$targetdir"/partition1, "$DIR"/setup.yml
+sudo ANSIBLE_NOCOWS=1 PATH=/fake:/usr/local/sbin:/usr/sbin:/sbin:/usr/local/bin:/usr/bin:/bin ansible-playbook -c chroot -i "$cleanup_mountpoint", "$DIR"/setup.yml
 
 #restore networking in chroot
-sudo ln -sf ../run/resolvconf/etc/resolv.conf "$targetdir"/partition1/etc/resolv.conf
+sudo ln -sf ../run/resolvconf/etc/resolv.conf "$cleanup_mountpoint"/etc/resolv.conf
 
 #cleanup the fake stuff
 sudo rm -rf "$fakedir"
 
+#get the kernel and initrd out
+mkdir -p "$targetdir"/kernels
+cleanup_kernels="$targetdir"/kernels
+for a in "$cleanup_mountpoint"/boot/vmlinuz-* ; do
+    kernel=`basename "$a"`
+    cp -fR "$a" "$cleanup_kernels"
+    break
+done
+for a in "$cleanup_mountpoint"/boot/initrd.img-* ; do
+    initrd=`basename "$a"`
+    cp -fR "$a" "$cleanup_kernels"
+    break
+done
+
+#write creation of bootloader
+cat > "$cleanup_mountpoint"/installbootloader << EOF
+#!/bin/bash
+
+mount / -o remount,rw
+grub-install /dev/sda
+update-grub
+rm -f /installbootloader
+sync
+mount / -o remount,ro
+sync
+echo 1 > /proc/sys/kernel/sysrq
+echo o > /proc/sysrq-trigger
+sleep 5
+echo cannot power off VM.  Please kill -15 this qemu process.
+EOF
+chmod +x "$cleanup_mountpoint"/installbootloader
+
 #cleanup everything but the lodev
 savedshit="$cleanup_lodev"
+savedshit2="$cleanup_kernels"
 unset cleanup_lodev
+unset cleanup_kernels
 cleanup force
 cleanup_lodev="$savedshit"
+cleanup_kernels="$savedshit2"
 unset savedshit
+unset savedshit2
+
+#install bootloader
+vmuuid=`python -c 'import uuid; print str(uuid.uuid1())'`
+qemu-system-x86_64 -enable-kvm -name dts-publishingstudio -M pc-1.2 -no-reboot -m 512 -uuid "$vmuuid" -kernel "$cleanup_kernels"/"$kernel" -initrd "$cleanup_kernels"/"$initrd" -append "root=/dev/sda1 ro init=/installbootloader console=ttyS0" -drive file="$lodev",if=none,id=drive-ide0-0-0,format=raw -device ide-hd,bus=ide.0,unit=0,drive=drive-ide0-0-0,id=ide0-0-0,bootindex=1 -nographic -serial /dev/stdout
 
 if [ -z "$NOZEROFREE" ] ; then
     #zerofree the partition image
