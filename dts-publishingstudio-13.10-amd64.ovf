@@ -39,15 +39,15 @@
         <vssd:VirtualSystemType>vmx-07 qemu-pc qemu-pc-0.13 virtualbox-2.2</vssd:VirtualSystemType>
       </System>
       <Item>
-        <rasd:Caption>2 virtual CPUs</rasd:Caption>
+        <rasd:ElementName>2 virtual CPUs</rasd:ElementName>
         <rasd:Description>Number of virtual CPUs</rasd:Description>
-        <rasd:InstanceID>2</rasd:InstanceID>
+        <rasd:InstanceID>1</rasd:InstanceID>
         <rasd:ResourceType>3</rasd:ResourceType>
         <rasd:VirtualQuantity>2</rasd:VirtualQuantity>
       </Item>
       <Item>
         <rasd:AllocationUnits>MegaBytes</rasd:AllocationUnits>
-        <rasd:Caption>2048 MB of memory</rasd:Caption>
+        <rasd:ElementName>2048 MB of memory</rasd:ElementName>
         <rasd:Description>Memory Size</rasd:Description>
         <rasd:InstanceID>2</rasd:InstanceID>
         <rasd:ResourceType>4</rasd:ResourceType>
@@ -88,7 +88,7 @@
         <rasd:AutomaticAllocation>false</rasd:AutomaticAllocation>
         <rasd:Caption>sound</rasd:Caption>
         <rasd:Description>Sound Card</rasd:Description>
-        <rasd:InstanceID>6</rasd:InstanceID>
+        <rasd:InstanceID>7</rasd:InstanceID>
         <rasd:ResourceSubType>ensoniq1371</rasd:ResourceSubType>
         <rasd:ResourceType>35</rasd:ResourceType>
       </Item>
@@ -97,7 +97,7 @@
         <sasd:Description>Disk Image</sasd:Description>
         <rasd:ElementName>disk1</rasd:ElementName>
         <rasd:HostResource>/disk/vmdisk1</rasd:HostResource>
-        <rasd:InstanceID>7</rasd:InstanceID>
+        <rasd:InstanceID>8</rasd:InstanceID>
         <rasd:Parent>4</rasd:Parent>
         <rasd:ResourceType>17</rasd:ResourceType>
       </Item>
@@ -107,7 +107,7 @@
         <rasd:Connection>bridged</rasd:Connection>
         <rasd:Description>ethernet adapter on &quot;bridged&quot;</rasd:Description>
         <rasd:ElementName>ethernet0</rasd:ElementName>
-        <rasd:InstanceID>8</rasd:InstanceID>
+        <rasd:InstanceID>9</rasd:InstanceID>
         <rasd:ResourceSubType>E1000</rasd:ResourceSubType>
         <rasd:ResourceType>10</rasd:ResourceType>
       </Item>
