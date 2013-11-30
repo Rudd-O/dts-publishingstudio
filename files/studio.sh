@@ -1,3 +1,3 @@
 #!/bin/bash
-echo "$PATH" | grep -q studio || export PATH="$PATH":/usr/local/studio/utils
-[ -n "$STUDIOARCHIVEDIR" ] || export STUDIOARCHIVEDIR=~/Documents
+echo "$PATH" | grep -q publishingstudio || export PATH="$PATH":/usr/local/dts-publishingstudio/utils
+[ -n "$STUDIOARCHIVEDIR" ] || export STUDIOARCHIVEDIR=~/Studio

@@ -4,22 +4,28 @@
     - name: set hostname
       copy: content=publishingstudio.declinefm.com dest=/etc/hostname
     - name: install necessary packages
-      apt: update_cache=yes pkg=ubuntu-desktop,audacity,git,sox,vlc,lame,libid3-tools,sonic-visualiser
+      apt: update_cache=yes pkg=ubuntu-desktop,audacity,git,sox,vlc,lame,libid3-tools,sonic-visualiser,dkms,virtualbox-guest-x11,virtualbox-guest-utils,virtualbox-guest-dkms
     - name: remove undesirable packages
       apt: pkg=totem,rhythmbox,openssh-server state=absent
 # the initial password is simply 'password', lowercase
     - name: create group ubuntu
       group: name=ubuntu
     - name: create user ubuntu
-      user: name=ubuntu group=ubuntu groups=admin update_password=on_create password=$1$SomeSalt$/jbIwfYCu0MxPBND2EtRH.
-    - name: clone studio repository
-      git: repo=https://github.com/Rudd-O/studio dest=/usr/local/studio
+      user: name=ubuntu group=ubuntu groups=admin shell=/bin/bash update_password=on_create password=$1$SomeSalt$/jbIwfYCu0MxPBND2EtRH.
+    - name: clone publishing studio repository
+      git: repo=https://github.com/Rudd-O/dts-publishingstudio dest=/usr/local/dts-publishingstudio
     - name: wire repository up into path
       copy: src=files/studio.sh dest=/etc/profile.d/studio.sh
     - name: create swap files
       shell: creates=/var/swap dd if=/dev/zero of=/var/swap bs=1M count=0 seek=2048 && chmod 700 /var/swap && mkswap /var/swap
     - name: add swap file to fstab
       lineinfile: dest=/etc/fstab regexp=^/var/swap line='/var/swap none swap defaults 0 0'
+    - name: create ${item} directory
+      file: owner=ubuntu group=ubuntu dest=/home/ubuntu/{{ item }} state=directory mode=0755
+      with_items:
+        - Studio
+        - Studio/Recordings
+        - Studio/Clips
     - name: add ${item} directory to Nautilus bookmarks
       lineinfile: owner=ubuntu group=ubuntu dest=/home/ubuntu/.gtk-bookmarks regexp='{{ item }}' line='sftp://ubuntu@studio.declinefm.com/home/ubuntu/Studio/{{ item }} {{ item }}' create=yes
       with_items:
