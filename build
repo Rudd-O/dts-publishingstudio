@@ -169,25 +169,25 @@ cleanup_ovf="$targetdir"/dts-publishingstudio-13.10-amd64.ovf
 pushd "$targetdir" > /dev/null
 
 #create image
-cleanup_dest_img="$PWD"/dts-publishingstudio-13.10-amd64-disk1.img
-qemu-img convert -S 512 -O qcow2 ubuntu-13.10-server-cloudimg-amd64-disk1.raw dts-publishingstudio-13.10-amd64-disk1.img
+cleanup_dest_img="$PWD"/dts-publishingstudio-13.10-amd64-disk1.vmdk
+qemu-img convert -S 512 -O vmdk ubuntu-13.10-server-cloudimg-amd64-disk1.raw dts-publishingstudio-13.10-amd64-disk1.vmdk
 
 ovfsum=`sha256sum dts-publishingstudio-13.10-amd64.ovf | cut -d ' ' -f 3`
-imgsum=`sha256sum dts-publishingstudio-13.10-amd64-disk1.img | cut -d ' ' -f 3`
+imgsum=`sha256sum dts-publishingstudio-13.10-amd64-disk1.vmdk | cut -d ' ' -f 3`
 
 #generate manifest for extra anti-tampering goodness
 cleanup_mf="$PWD"/dts-publishingstudio-13.10-amd64.mf
 cat > dts-publishingstudio-13.10-amd64.mf << EOF
-SHA256(dts-publishingstudio-13.10-amd64.ovf)= $ovfsum
-SHA256(dts-publishingstudio-13.10-amd64-disk1.img)= $imgsum
+SHA256 (dts-publishingstudio-13.10-amd64.ovf)= $ovfsum
+SHA256 (dts-publishingstudio-13.10-amd64-disk1.vmdk)= $imgsum
 EOF
 
 #tar it all up
 cleanup_bad_ova="$PWD"/dts-publishingstudio-13.10-amd64.ova.xz
-tar cv dts-publishingstudio-13.10-amd64.ovf dts-publishingstudio-13.10-amd64.mf dts-publishingstudio-13.10-amd64-disk1.img | pxz -cv - > dts-publishingstudio-13.10-amd64.ova.xz
+tar cv dts-publishingstudio-13.10-amd64.ovf dts-publishingstudio-13.10-amd64-disk1.vmdk dts-publishingstudio-13.10-amd64.mf | pxz -cv - > dts-publishingstudio-13.10-amd64.ova.xz
 cleanup_bad_ova=
 
-cleanup_original_image="$targetdir"/ubuntu-13.10-server-cloudimg-amd64-disk1.img
+cleanup_original_image="$targetdir"/ubuntu-13.10-server-cloudimg-amd64-disk1.vmdk
 cleanup_created_image="$targetdir"/ubuntu-13.10-server-cloudimg-amd64-disk1.raw
 
 popd > /dev/null

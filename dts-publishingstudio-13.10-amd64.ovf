@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Envelope xmlns="http://schemas.dmtf.org/ovf/envelope/1" xmlns:cim="http://schemas.dmtf.org/wbem/wscim/1/common" xmlns:ovf="http://schemas.dmtf.org/ovf/envelope/1" xmlns:rasd="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ResourceAllocationSettingData" xmlns:vssd="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_VirtualSystemSettingData" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<Envelope ovf:version="2.0" xml:lang="en-US" xmlns="http://schemas.dmtf.org/ovf/envelope/2" xmlns:ovf="http://schemas.dmtf.org/ovf/envelope/2" xmlns:rasd="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ResourceAllocationSettingData" xmlns:vssd="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_VirtualSystemSettingData" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:vbox="http://www.virtualbox.org/ovf/machine" xmlns:epasd="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_EthernetPortAllocationSettingData.xsd" xmlns:sasd="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_StorageAllocationSettingData.xsd">
   <References>
-    <File ovf:href="dts-publishingstudio-13.10-amd64-disk1.img" ovf:id="file1" ovf:size="68719476736" />
+    <File ovf:href="dts-publishingstudio-13.10-amd64-disk1.vmdk" ovf:id="file1"/>
   </References>
   <DiskSection>
     <Info>Virtual disk information</Info>
-    <Disk ovf:capacity="68719476736" ovf:diskId="vmdisk1" ovf:fileRef="file1" ovf:format="http://wiki.qemu.org/download/qcow2-spec.html"/>
+    <Disk ovf:capacity="68719476736" ovf:diskId="vmdisk1" ovf:fileRef="file1" ovf:format="http://www.vmware.com/interfaces/specifications/vmdk.html#streamOptimized"/>
   </DiskSection>
   <NetworkSection>
     <Info>The list of logical networks</Info>
@@ -39,17 +39,16 @@
         <vssd:VirtualSystemType>vmx-07 qemu-pc qemu-pc-0.13 virtualbox-2.2</vssd:VirtualSystemType>
       </System>
       <Item>
-        <rasd:AllocationUnits>hertz * 10^6</rasd:AllocationUnits>
-        <rasd:Description>Number of Virtual CPUs</rasd:Description>
-        <rasd:ElementName>2 virtual CPU(s)</rasd:ElementName>
-        <rasd:InstanceID>1</rasd:InstanceID>
+        <rasd:Caption>2 virtual CPUs</rasd:Caption>
+        <rasd:Description>Number of virtual CPUs</rasd:Description>
+        <rasd:InstanceID>2</rasd:InstanceID>
         <rasd:ResourceType>3</rasd:ResourceType>
         <rasd:VirtualQuantity>2</rasd:VirtualQuantity>
       </Item>
       <Item>
-        <rasd:AllocationUnits>byte * 2^20</rasd:AllocationUnits>
+        <rasd:AllocationUnits>MegaBytes</rasd:AllocationUnits>
+        <rasd:Caption>2048 MB of memory</rasd:Caption>
         <rasd:Description>Memory Size</rasd:Description>
-        <rasd:ElementName>2 GB of memory</rasd:ElementName>
         <rasd:InstanceID>2</rasd:InstanceID>
         <rasd:ResourceType>4</rasd:ResourceType>
         <rasd:VirtualQuantity>2048</rasd:VirtualQuantity>
@@ -85,9 +84,19 @@
         <rasd:ResourceType>15</rasd:ResourceType>
       </Item>
       <Item>
+        <rasd:AddressOnParent>3</rasd:AddressOnParent>
+        <rasd:AutomaticAllocation>false</rasd:AutomaticAllocation>
+        <rasd:Caption>sound</rasd:Caption>
+        <rasd:Description>Sound Card</rasd:Description>
+        <rasd:InstanceID>6</rasd:InstanceID>
+        <rasd:ResourceSubType>ensoniq1371</rasd:ResourceSubType>
+        <rasd:ResourceType>35</rasd:ResourceType>
+      </Item>
+      <Item>
         <rasd:AddressOnParent>0</rasd:AddressOnParent>
+        <sasd:Description>Disk Image</sasd:Description>
         <rasd:ElementName>disk1</rasd:ElementName>
-        <rasd:HostResource>ovf:/disk/vmdisk1</rasd:HostResource>
+        <rasd:HostResource>/disk/vmdisk1</rasd:HostResource>
         <rasd:InstanceID>7</rasd:InstanceID>
         <rasd:Parent>4</rasd:Parent>
         <rasd:ResourceType>17</rasd:ResourceType>
