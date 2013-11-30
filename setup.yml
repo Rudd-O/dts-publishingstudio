@@ -37,3 +37,7 @@
       changed_when: reset_launcher_icons.stdout.find("configuration changed") != -1
     - name: clear apt cache
       shell: apt-get clean
+    - name: install grub
+      shell: grub-install {{ boot_device }}
+    - name: update grub
+      shell: update-grub

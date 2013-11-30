@@ -5,6 +5,10 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 set -e
 
+unset cleanup_chroot_lodev
+unset cleanup_chroot_lodevp1
+unset cleanup_chroot_proc
+unset cleanup_chroot_sys
 unset cleanup_mountpoint
 unset cleanup_partition1
 unset cleanup_lodev
@@ -16,6 +20,22 @@ unset cleanup_created_image
 unset cleanup_mf
 cleanup() {
     [ -n "$NOCLEANUP" -a "$1" != "force" ] && exit || true
+    [ -z "$cleanup_chroot_lodevp1" ] || {
+        sudo rm -f "$cleanup_chroot_lodevp1"
+        unset cleanup_chroot_lodevp1
+    }
+    [ -z "$cleanup_chroot_lodev" ] || {
+        sudo rm -f "$cleanup_chroot_lodev"
+        unset cleanup_chroot_lodev
+    }
+    [ -z "$cleanup_chroot_proc" ] || {
+        sudo umount "$cleanup_chroot_proc"
+        unset cleanup_chroot_proc
+    }
+    [ -z "$cleanup_chroot_sys" ] || {
+        sudo umount "$cleanup_chroot_sys"
+        unset cleanup_chroot_sys
+    }
     [ -z "$cleanup_mountpoint" ] || {
         sudo umount "$cleanup_mountpoint"
         unset cleanup_mountpoint
@@ -143,8 +163,19 @@ for a in initctl invoke-rc.d restart start stop start-stop-daemon service ; do
     sudo chmod +x "$fakedir"/$a
 done
 
+# prepare to install grub
+cp -Rf "$lodev" "$cleanup_mountpoint"/dev/
+cleanup_chroot_lodev="$cleanup_mountpoint""$lodev"
+cp -Rf "$lodev"p1 "$cleanup_mountpoint"/dev/
+cleanup_chroot_lodevp1="$cleanup_mountpoint""$lodev"p1
+
+mountpoint -q "$cleanup_mountpoint"/proc || sudo mount -t proc proc "$cleanup_mountpoint"/proc
+cleanup_chroot_proc="$cleanup_mountpoint"/proc
+mountpoint -q "$cleanup_mountpoint"/sys || sudo mount -t sysfs sysfs "$cleanup_mountpoint"/sys
+cleanup_chroot_sys="$cleanup_mountpoint"/sys
+
 #fire ansible up
-sudo ANSIBLE_NOCOWS=1 PATH=/fake:/usr/local/sbin:/usr/sbin:/sbin:/usr/local/bin:/usr/bin:/bin ansible-playbook -c chroot -i "$targetdir"/partition1, "$DIR"/setup.yml
+sudo ANSIBLE_NOCOWS=1 PATH=/fake:/usr/local/sbin:/usr/sbin:/sbin:/usr/local/bin:/usr/bin:/bin ansible-playbook --extra-vars "boot_device=$lodev" -c chroot -i "$targetdir"/partition1, "$DIR"/setup.yml
 
 #restore networking in chroot
 sudo ln -sf ../run/resolvconf/etc/resolv.conf "$targetdir"/partition1/etc/resolv.conf
@@ -152,15 +183,12 @@ sudo ln -sf ../run/resolvconf/etc/resolv.conf "$targetdir"/partition1/etc/resolv
 #cleanup the fake stuff
 sudo rm -rf "$fakedir"
 
-#unmount the filesystem
-sudo umount "$cleanup_mountpoint"
-unset cleanup_mountpoint
-
-#zerofree the partition image
-sudo zerofree -v "$lodev"p1
-
-#cleanup everything
+#cleanup everything but the lodev
+savedshit="$cleanup_lodev"
+unset cleanup_lodev
 cleanup force
+cleanup_lodev="$savedshit"
+unset savedshit
 
 if [ -z "$NOZEROFREE" ] ; then
     #zerofree the partition image
