@@ -3,6 +3,8 @@
   tasks:
     - name: set hostname
       copy: content=publishingstudio.declinefm.com dest=/etc/hostname
+    - name: add hostname to hosts file
+      lineinfile: dest=/etc/hosts regexp=publishingstudio.declinefm.com line='127.0.0.2 publishingstudio.declinefm.com publishingstudio'
     - name: install necessary packages
       apt: update_cache=yes pkg=ubuntu-desktop,audacity,git,sox,vlc,lame,libid3-tools,sonic-visualiser,dkms,virtualbox-guest-x11,virtualbox-guest-utils,virtualbox-guest-dkms
     - name: remove undesirable packages
