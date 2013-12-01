@@ -253,17 +253,7 @@
           <CardReader enabled="false"/>
         </EmulatedUSB>
         <Guest memoryBalloonSize="0"/>
-        <GuestProperties>
-          <GuestProperty name="/VirtualBox/GuestAdd/HostVerLastChecked" value="4.2.18" timestamp="1385850093690003000" flags=""/>
-          <GuestProperty name="/VirtualBox/GuestAdd/Revision" value="86992" timestamp="1385850013082515000" flags=""/>
-          <GuestProperty name="/VirtualBox/GuestAdd/Vbgl/Video/SavedMode" value="1920x895x32" timestamp="1385850190279986000" flags=""/>
-          <GuestProperty name="/VirtualBox/GuestAdd/Version" value="4.2.16" timestamp="1385850013081034000" flags=""/>
-          <GuestProperty name="/VirtualBox/GuestAdd/VersionExt" value="4.2.16_Ubuntu" timestamp="1385850013081644000" flags=""/>
-          <GuestProperty name="/VirtualBox/GuestInfo/OS/Product" value="Linux" timestamp="1385850013078053000" flags=""/>
-          <GuestProperty name="/VirtualBox/GuestInfo/OS/Release" value="3.11.0-13-generic" timestamp="1385850013078270000" flags=""/>
-          <GuestProperty name="/VirtualBox/GuestInfo/OS/Version" value="#20-Ubuntu SMP Wed Oct 23 07:38:26 UTC 2013" timestamp="1385850013080671000" flags=""/>
-          <GuestProperty name="/VirtualBox/HostInfo/GUI/LanguageID" value="en_US" timestamp="1385849872055856000" flags=""/>
-        </GuestProperties>
+        <GuestProperties/>
       </Hardware>
       <StorageControllers>
         <StorageController name="IDE Controller" type="PIIX4" PortCount="2" useHostIOCache="true" Bootable="true">
