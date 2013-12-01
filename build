@@ -164,8 +164,8 @@ cleanup_mountpoint_proc="$PWD"/partition1/proc
 #create apt cache directory
 mkdir -p "$PWD"/aptcache
 cleanup_aptcache="$PWD"/aptcache
-mountpoint -q "$cleanup_mountpoint"/var/cache/apt || mount --bind "$cleanup_aptcache" "$cleanup_mountpoint"/var/cache/apt
-cleanup_mountpoint_aptcache="$cleanup_mountpoint"/var/cache/apt
+mountpoint -q "$cleanup_mountpoint"/var/cache/apt/archives || mount --bind "$cleanup_aptcache" "$cleanup_mountpoint"/var/cache/apt/archives
+cleanup_mountpoint_aptcache="$cleanup_mountpoint"/var/cache/apt/archives
 
 popd > /dev/null
 

@@ -65,3 +65,5 @@
       changed_when: reset_launcher_icons.stdout.find("configuration changed") != -1
     - name: empty apt lists
       shell: rm -rf /var/lib/apt/lists/*
+    - name: clear apt cache (except for files)
+      shell: rm -rf /var/cache/apt/pkgcache* /var/cache/apt/srcpkgcache*
