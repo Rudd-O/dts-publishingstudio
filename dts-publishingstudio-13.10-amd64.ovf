@@ -145,7 +145,7 @@
           <Order position="3" device="None"/>
           <Order position="4" device="None"/>
         </Boot>
-        <Display VRAMSize="32" monitorCount="1" accelerate3D="true" accelerate2DVideo="false"/>
+        <Display VRAMSize="64" monitorCount="1" accelerate3D="true" accelerate2DVideo="false"/>
         <VideoRecording enabled="false" file="Test.webm" horzRes="640" vertRes="480"/>
         <RemoteDisplay enabled="false" authType="Null">
           <VRDEProperties>
