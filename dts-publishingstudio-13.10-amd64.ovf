@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Envelope ovf:version="2.0" xml:lang="en-US" xmlns="http://schemas.dmtf.org/ovf/envelope/2" xmlns:ovf="http://schemas.dmtf.org/ovf/envelope/2" xmlns:rasd="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ResourceAllocationSettingData" xmlns:vssd="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_VirtualSystemSettingData" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:vbox="http://www.virtualbox.org/ovf/machine" xmlns:epasd="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_EthernetPortAllocationSettingData.xsd" xmlns:sasd="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_StorageAllocationSettingData.xsd">
+<?xml version="1.0"?>
+<Envelope ovf:version="1.0" xml:lang="en-US" xmlns="http://schemas.dmtf.org/ovf/envelope/1" xmlns:ovf="http://schemas.dmtf.org/ovf/envelope/1" xmlns:rasd="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ResourceAllocationSettingData" xmlns:vssd="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_VirtualSystemSettingData" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:vbox="http://www.virtualbox.org/ovf/machine">
   <References>
-    <File ovf:href="dts-publishingstudio-13.10-amd64-disk1.vmdk" ovf:id="file1"/>
+    <File ovf:href="dts-publishingstudio-13.10-amd64-disk1.vmdk" ovf:id="file1" vbox:uuid="c23a75cd-8a54-44eb-9364-ffdee87ddd7a"/>
   </References>
   <DiskSection>
     <Info>Virtual disk information</Info>
@@ -19,102 +19,262 @@
     <OperatingSystemSection ovf:id="93">
       <Info>13.10 (Saucy Salamander) Server</Info>
     </OperatingSystemSection>
-    <ProductSection>
-      <Info>Cloud-Init customization</Info>
-      <Product>Decline to State publishing studio based on 13.10 (Saucy Salamander) Server</Product>
-      <Property ovf:key="instance-id" ovf:type="string" ovf:userConfigurable="true" ovf:value="dts-ovf">
-          <Label>A Unique Instance ID for this instance</Label>
-          <Description>Specifies the instance id.  This is required and used to determine if the machine should take "first boot" actions</Description>
-      </Property>
-      <Property ovf:key="hostname" ovf:type="string" ovf:userConfigurable="true" ovf:value="publishingstudio.declinetostate">
-          <Description>Specifies the hostname for the appliance</Description>
-      </Property>
-    </ProductSection>
-    <VirtualHardwareSection ovf:transport="iso">
-      <Info>Virtual hardware requirements</Info>
+    <VirtualHardwareSection>
+      <Info>Virtual hardware requirements for a virtual machine</Info>
       <System>
         <vssd:ElementName>Virtual Hardware Family</vssd:ElementName>
         <vssd:InstanceID>0</vssd:InstanceID>
-        <vssd:VirtualSystemIdentifier>Ubuntu 13.10 (Saucy Salamander) Server</vssd:VirtualSystemIdentifier>
-        <vssd:VirtualSystemType>vmx-07 qemu-pc qemu-pc-0.13 virtualbox-2.2</vssd:VirtualSystemType>
+        <vssd:VirtualSystemIdentifier>Publishing studio</vssd:VirtualSystemIdentifier>
+        <vssd:VirtualSystemType>virtualbox-2.2</vssd:VirtualSystemType>
       </System>
       <Item>
-        <rasd:ElementName>2 virtual CPUs</rasd:ElementName>
+        <rasd:Caption>2 virtual CPU</rasd:Caption>
         <rasd:Description>Number of virtual CPUs</rasd:Description>
+        <rasd:ElementName>2 virtual CPU</rasd:ElementName>
         <rasd:InstanceID>1</rasd:InstanceID>
         <rasd:ResourceType>3</rasd:ResourceType>
         <rasd:VirtualQuantity>2</rasd:VirtualQuantity>
       </Item>
       <Item>
         <rasd:AllocationUnits>MegaBytes</rasd:AllocationUnits>
-        <rasd:ElementName>2048 MB of memory</rasd:ElementName>
+        <rasd:Caption>2048 MB of memory</rasd:Caption>
         <rasd:Description>Memory Size</rasd:Description>
+        <rasd:ElementName>2048 MB of memory</rasd:ElementName>
         <rasd:InstanceID>2</rasd:InstanceID>
         <rasd:ResourceType>4</rasd:ResourceType>
         <rasd:VirtualQuantity>2048</rasd:VirtualQuantity>
       </Item>
-      <Item ovf:required="false">
+      <Item>
         <rasd:Address>0</rasd:Address>
-        <rasd:Description>USB Controller</rasd:Description>
-        <rasd:ElementName>usb</rasd:ElementName>
+        <rasd:Caption>ideController0</rasd:Caption>
+        <rasd:Description>IDE Controller</rasd:Description>
+        <rasd:ElementName>ideController0</rasd:ElementName>
         <rasd:InstanceID>3</rasd:InstanceID>
-        <rasd:ResourceType>23</rasd:ResourceType>
+        <rasd:ResourceSubType>PIIX4</rasd:ResourceSubType>
+        <rasd:ResourceType>5</rasd:ResourceType>
+      </Item>
+      <Item>
+        <rasd:Address>1</rasd:Address>
+        <rasd:Caption>ideController1</rasd:Caption>
+        <rasd:Description>IDE Controller</rasd:Description>
+        <rasd:ElementName>ideController1</rasd:ElementName>
+        <rasd:InstanceID>4</rasd:InstanceID>
+        <rasd:ResourceSubType>PIIX4</rasd:ResourceSubType>
+        <rasd:ResourceType>5</rasd:ResourceType>
       </Item>
       <Item>
         <rasd:Address>0</rasd:Address>
+        <rasd:Caption>scsiController0</rasd:Caption>
         <rasd:Description>SCSI Controller</rasd:Description>
         <rasd:ElementName>scsiController0</rasd:ElementName>
-        <rasd:InstanceID>4</rasd:InstanceID>
+        <rasd:InstanceID>5</rasd:InstanceID>
         <rasd:ResourceSubType>lsilogic</rasd:ResourceSubType>
         <rasd:ResourceType>6</rasd:ResourceType>
       </Item>
       <Item>
-        <rasd:Address>1</rasd:Address>
-        <rasd:Description>IDE Controller</rasd:Description>
-        <rasd:ElementName>ideController1</rasd:ElementName>
-        <rasd:InstanceID>5</rasd:InstanceID>
-        <rasd:ResourceType>5</rasd:ResourceType>
-      </Item>
-      <Item ovf:required="false">
-        <rasd:AddressOnParent>0</rasd:AddressOnParent>
-        <rasd:AutomaticAllocation>false</rasd:AutomaticAllocation>
-        <rasd:ElementName>cdrom1</rasd:ElementName>
+        <rasd:AutomaticAllocation>true</rasd:AutomaticAllocation>
+        <rasd:Caption>Ethernet adapter on 'Bridged'</rasd:Caption>
+        <rasd:Connection>Bridged</rasd:Connection>
+        <rasd:ElementName>Ethernet adapter on 'Bridged'</rasd:ElementName>
         <rasd:InstanceID>6</rasd:InstanceID>
-        <rasd:Parent>5</rasd:Parent>
-        <rasd:ResourceType>15</rasd:ResourceType>
+        <rasd:ResourceSubType>E1000</rasd:ResourceSubType>
+        <rasd:ResourceType>10</rasd:ResourceType>
+      </Item>
+      <Item>
+        <rasd:Address>0</rasd:Address>
+        <rasd:Caption>usb</rasd:Caption>
+        <rasd:Description>USB Controller</rasd:Description>
+        <rasd:ElementName>usb</rasd:ElementName>
+        <rasd:InstanceID>7</rasd:InstanceID>
+        <rasd:ResourceType>23</rasd:ResourceType>
       </Item>
       <Item>
         <rasd:AddressOnParent>3</rasd:AddressOnParent>
         <rasd:AutomaticAllocation>false</rasd:AutomaticAllocation>
         <rasd:Caption>sound</rasd:Caption>
         <rasd:Description>Sound Card</rasd:Description>
-        <rasd:InstanceID>7</rasd:InstanceID>
+        <rasd:ElementName>sound</rasd:ElementName>
+        <rasd:InstanceID>8</rasd:InstanceID>
         <rasd:ResourceSubType>ensoniq1371</rasd:ResourceSubType>
         <rasd:ResourceType>35</rasd:ResourceType>
       </Item>
       <Item>
         <rasd:AddressOnParent>0</rasd:AddressOnParent>
-        <sasd:Description>Disk Image</sasd:Description>
-        <rasd:ElementName>disk1</rasd:ElementName>
-        <rasd:HostResource>/disk/vmdisk1</rasd:HostResource>
-        <rasd:InstanceID>8</rasd:InstanceID>
+        <rasd:AutomaticAllocation>true</rasd:AutomaticAllocation>
+        <rasd:Caption>cdrom1</rasd:Caption>
+        <rasd:Description>CD-ROM Drive</rasd:Description>
+        <rasd:ElementName>cdrom1</rasd:ElementName>
+        <rasd:InstanceID>9</rasd:InstanceID>
         <rasd:Parent>4</rasd:Parent>
-        <rasd:ResourceType>17</rasd:ResourceType>
+        <rasd:ResourceType>15</rasd:ResourceType>
       </Item>
       <Item>
-        <rasd:AddressOnParent>2</rasd:AddressOnParent>
-        <rasd:AutomaticAllocation>true</rasd:AutomaticAllocation>
-        <rasd:Connection>bridged</rasd:Connection>
-        <rasd:Description>ethernet adapter on &quot;bridged&quot;</rasd:Description>
-        <rasd:ElementName>ethernet0</rasd:ElementName>
-        <rasd:InstanceID>9</rasd:InstanceID>
-        <rasd:ResourceSubType>E1000</rasd:ResourceSubType>
-        <rasd:ResourceType>10</rasd:ResourceType>
+        <rasd:AddressOnParent>0</rasd:AddressOnParent>
+        <rasd:Caption>disk1</rasd:Caption>
+        <rasd:Description>Disk Image</rasd:Description>
+        <rasd:ElementName>disk1</rasd:ElementName>
+        <rasd:HostResource>/disk/vmdisk1</rasd:HostResource>
+        <rasd:InstanceID>10</rasd:InstanceID>
+        <rasd:Parent>5</rasd:Parent>
+        <rasd:ResourceType>17</rasd:ResourceType>
       </Item>
     </VirtualHardwareSection>
-    <AnnotationSection ovf:required="false">
-      <Info>For more information, see https://github.com/Rudd-O/dts-publishingstudio</Info>
-      <Annotation>This is a customized flavor of Ubuntu Server for the Decline to State team.</Annotation>
-    </AnnotationSection>
+    <vbox:Machine ovf:required="false" version="1.12-linux" uuid="{db7934fb-9f11-47e1-b0bc-180efc014339}" name="Publishing studio" OSType="Ubuntu" snapshotFolder="Snapshots" lastStateChange="2013-11-30T22:23:20Z">
+      <ovf:Info>Complete VirtualBox machine configuration in VirtualBox format</ovf:Info>
+      <Description>This is a customized flavor of Ubuntu Server for the Decline to State team.</Description>
+      <ExtraData>
+        <ExtraDataItem name="GUI/LastGuestSizeHint" value="720,400"/>
+        <ExtraDataItem name="GUI/LastNormalWindowPosition" value="285,91,1024,853,max"/>
+      </ExtraData>
+      <Hardware version="2">
+        <CPU count="2" hotplug="false">
+          <HardwareVirtEx enabled="true" exclusive="true"/>
+          <HardwareVirtExNestedPaging enabled="true"/>
+          <HardwareVirtExVPID enabled="true"/>
+          <PAE enabled="true"/>
+          <HardwareVirtExLargePages enabled="false"/>
+          <HardwareVirtForce enabled="false"/>
+        </CPU>
+        <Memory RAMSize="2048" PageFusion="false"/>
+        <HID Pointing="PS2Mouse" Keyboard="PS2Keyboard"/>
+        <HPET enabled="false"/>
+        <Chipset type="PIIX3"/>
+        <Boot>
+          <Order position="1" device="HardDisk"/>
+          <Order position="2" device="None"/>
+          <Order position="3" device="None"/>
+          <Order position="4" device="None"/>
+        </Boot>
+        <Display VRAMSize="32" monitorCount="1" accelerate3D="true" accelerate2DVideo="false"/>
+        <VideoRecording enabled="false" file="Test.webm" horzRes="640" vertRes="480"/>
+        <RemoteDisplay enabled="false" authType="Null">
+          <VRDEProperties>
+            <Property name="TCP/Ports" value="3389"/>
+          </VRDEProperties>
+        </RemoteDisplay>
+        <BIOS>
+          <ACPI enabled="true"/>
+          <IOAPIC enabled="true"/>
+          <Logo fadeIn="true" fadeOut="true" displayTime="0"/>
+          <BootMenu mode="MessageAndMenu"/>
+          <TimeOffset value="0"/>
+          <PXEDebug enabled="false"/>
+        </BIOS>
+        <USBController enabled="true" enabledEhci="false"/>
+        <Network>
+          <Adapter slot="0" enabled="true" MACAddress="08002720583E" cable="true" speed="0" type="82540EM">
+            <DisabledModes>
+              <NAT>
+                <DNS pass-domain="true" use-proxy="false" use-host-resolver="false"/>
+                <Alias logging="false" proxy-only="false" use-same-ports="false"/>
+              </NAT>
+              <InternalNetwork name="intnet"/>
+            </DisabledModes>
+            <BridgedInterface name="em1"/>
+          </Adapter>
+          <Adapter slot="1" enabled="false" MACAddress="08002718D40F" cable="true" speed="0" type="82540EM">
+            <DisabledModes>
+              <NAT>
+                <DNS pass-domain="true" use-proxy="false" use-host-resolver="false"/>
+                <Alias logging="false" proxy-only="false" use-same-ports="false"/>
+              </NAT>
+            </DisabledModes>
+          </Adapter>
+          <Adapter slot="2" enabled="false" MACAddress="080027D22F0D" cable="true" speed="0" type="82540EM">
+            <DisabledModes>
+              <NAT>
+                <DNS pass-domain="true" use-proxy="false" use-host-resolver="false"/>
+                <Alias logging="false" proxy-only="false" use-same-ports="false"/>
+              </NAT>
+            </DisabledModes>
+          </Adapter>
+          <Adapter slot="3" enabled="false" MACAddress="080027F3BFE1" cable="true" speed="0" type="82540EM">
+            <DisabledModes>
+              <NAT>
+                <DNS pass-domain="true" use-proxy="false" use-host-resolver="false"/>
+                <Alias logging="false" proxy-only="false" use-same-ports="false"/>
+              </NAT>
+            </DisabledModes>
+          </Adapter>
+          <Adapter slot="4" enabled="false" MACAddress="080027219148" cable="true" speed="0" type="82540EM">
+            <DisabledModes>
+              <NAT>
+                <DNS pass-domain="true" use-proxy="false" use-host-resolver="false"/>
+                <Alias logging="false" proxy-only="false" use-same-ports="false"/>
+              </NAT>
+            </DisabledModes>
+          </Adapter>
+          <Adapter slot="5" enabled="false" MACAddress="080027F63F14" cable="true" speed="0" type="82540EM">
+            <DisabledModes>
+              <NAT>
+                <DNS pass-domain="true" use-proxy="false" use-host-resolver="false"/>
+                <Alias logging="false" proxy-only="false" use-same-ports="false"/>
+              </NAT>
+            </DisabledModes>
+          </Adapter>
+          <Adapter slot="6" enabled="false" MACAddress="080027D8CB1F" cable="true" speed="0" type="82540EM">
+            <DisabledModes>
+              <NAT>
+                <DNS pass-domain="true" use-proxy="false" use-host-resolver="false"/>
+                <Alias logging="false" proxy-only="false" use-same-ports="false"/>
+              </NAT>
+            </DisabledModes>
+          </Adapter>
+          <Adapter slot="7" enabled="false" MACAddress="08002765344F" cable="true" speed="0" type="82540EM">
+            <DisabledModes>
+              <NAT>
+                <DNS pass-domain="true" use-proxy="false" use-host-resolver="false"/>
+                <Alias logging="false" proxy-only="false" use-same-ports="false"/>
+              </NAT>
+            </DisabledModes>
+          </Adapter>
+        </Network>
+        <UART>
+          <Port slot="0" enabled="false" IOBase="0x3f8" IRQ="4" hostMode="Disconnected"/>
+          <Port slot="1" enabled="false" IOBase="0x2f8" IRQ="3" hostMode="Disconnected"/>
+        </UART>
+        <LPT>
+          <Port slot="0" enabled="false" IOBase="0x378" IRQ="7"/>
+          <Port slot="1" enabled="false" IOBase="0x378" IRQ="7"/>
+        </LPT>
+        <AudioAdapter controller="AC97" driver="Pulse" enabled="true"/>
+        <RTC localOrUTC="local"/>
+        <SharedFolders/>
+        <Clipboard mode="Disabled"/>
+        <DragAndDrop mode="Disabled"/>
+        <IO>
+          <IoCache enabled="true" size="5"/>
+          <BandwidthGroups/>
+        </IO>
+        <HostPci>
+          <Devices/>
+        </HostPci>
+        <EmulatedUSB>
+          <CardReader enabled="false"/>
+        </EmulatedUSB>
+        <Guest memoryBalloonSize="0"/>
+        <GuestProperties>
+          <GuestProperty name="/VirtualBox/GuestAdd/HostVerLastChecked" value="4.2.18" timestamp="1385850093690003000" flags=""/>
+          <GuestProperty name="/VirtualBox/GuestAdd/Revision" value="86992" timestamp="1385850013082515000" flags=""/>
+          <GuestProperty name="/VirtualBox/GuestAdd/Vbgl/Video/SavedMode" value="1920x895x32" timestamp="1385850190279986000" flags=""/>
+          <GuestProperty name="/VirtualBox/GuestAdd/Version" value="4.2.16" timestamp="1385850013081034000" flags=""/>
+          <GuestProperty name="/VirtualBox/GuestAdd/VersionExt" value="4.2.16_Ubuntu" timestamp="1385850013081644000" flags=""/>
+          <GuestProperty name="/VirtualBox/GuestInfo/OS/Product" value="Linux" timestamp="1385850013078053000" flags=""/>
+          <GuestProperty name="/VirtualBox/GuestInfo/OS/Release" value="3.11.0-13-generic" timestamp="1385850013078270000" flags=""/>
+          <GuestProperty name="/VirtualBox/GuestInfo/OS/Version" value="#20-Ubuntu SMP Wed Oct 23 07:38:26 UTC 2013" timestamp="1385850013080671000" flags=""/>
+          <GuestProperty name="/VirtualBox/HostInfo/GUI/LanguageID" value="en_US" timestamp="1385849872055856000" flags=""/>
+        </GuestProperties>
+      </Hardware>
+      <StorageControllers>
+        <StorageController name="IDE Controller" type="PIIX4" PortCount="2" useHostIOCache="true" Bootable="true">
+          <AttachedDevice passthrough="false" type="DVD" port="1" device="0"/>
+        </StorageController>
+        <StorageController name="SCSI Controller" type="LsiLogic" PortCount="16" useHostIOCache="false" Bootable="true">
+          <AttachedDevice type="HardDisk" port="0" device="0">
+            <Image uuid="{c23a75cd-8a54-44eb-9364-ffdee87ddd7a}"/>
+          </AttachedDevice>
+        </StorageController>
+      </StorageControllers>
+    </vbox:Machine>
   </VirtualSystem>
 </Envelope>
