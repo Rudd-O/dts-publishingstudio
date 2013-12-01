@@ -67,3 +67,5 @@
       shell: rm -rf /var/lib/apt/lists/*
     - name: clear apt cache (except for files)
       shell: rm -rf /var/cache/apt/pkgcache* /var/cache/apt/srcpkgcache*
+    - name: enable autologin
+      copy: src=files/90-autologin.conf dest=/etc/lightdm/lightdm.conf.d/90-autologin.conf
