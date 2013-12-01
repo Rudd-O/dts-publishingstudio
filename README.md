@@ -38,7 +38,6 @@ The following software is required in the computer running the programs included
 - losetup
 - ansible
 - sudo
-- pxz
 - zerofree
 - VirtualBox
 
@@ -48,6 +47,6 @@ The following software is required in the computer running the programs included
 2. Create an empty directory somewhere.
 3. Run the `./build <path to the new directory>` command.
 
-In that directory, the output OVA file will be present when the process is done.  It will be named `dts-publishingstudio-<XX>.<YY>-amd64.ova.xz`.  You can import this OVA file into VirtualBox by first decompressing it (with a program line 7-Zip) and then importing it through the Import Appliance... menu item in VirtualBox.
+In that directory, the output OVA file will be present when the process is done.  It will be named `dts-publishingstudio-<XX>.<YY>-amd64.ova`.  You can import this OVA file into VirtualBox through the Import Appliance... menu item in VirtualBox.
 
 The `build` command needs to be run with root privileges, or some sudo configuration to make it passwordless.  Ensure you do what's necessary to make it work.
