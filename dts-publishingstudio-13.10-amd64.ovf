@@ -13,7 +13,7 @@
       <Description>Logical network used by this appliance.</Description>
     </Network>
   </NetworkSection>
-  <VirtualSystem ovf:id="Publishing studio">
+  <VirtualSystem ovf:id="dts-publishingstudio-13.10-amd64">
     <Info>Decline to State publishing studio</Info>
     <Name>Ubuntu</Name>
     <OperatingSystemSection ovf:id="93">
@@ -24,7 +24,7 @@
       <System>
         <vssd:ElementName>Virtual Hardware Family</vssd:ElementName>
         <vssd:InstanceID>0</vssd:InstanceID>
-        <vssd:VirtualSystemIdentifier>Publishing studio</vssd:VirtualSystemIdentifier>
+        <vssd:VirtualSystemIdentifier>dts-publishingstudio-13.10-amd64</vssd:VirtualSystemIdentifier>
         <vssd:VirtualSystemType>virtualbox-2.2</vssd:VirtualSystemType>
       </System>
       <Item>
