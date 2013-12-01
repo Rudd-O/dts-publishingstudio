@@ -160,7 +160,7 @@ cp -f /etc/resolv.conf "$cleanup_mountpoint"/etc/resolv.conf
 #fool system into believing that shit exists
 fakedir="$cleanup_mountpoint"/fake
 mkdir -p "$fakedir"
-for a in update-initramfs initctl invoke-rc.d restart start stop start-stop-daemon service ; do
+for a in update-grub update-initramfs initctl invoke-rc.d restart start stop start-stop-daemon service ; do
     echo "#/bin/bash" | tee "$fakedir"/$a > /dev/null
     chmod +x "$fakedir"/$a
 done
