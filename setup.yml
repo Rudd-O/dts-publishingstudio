@@ -11,6 +11,12 @@
         - "{{ ansible_distribution_release }}"
         - "{{ ansible_distribution_release }}-updates"
         - "{{ ansible_distribution_release }}-security"
+    - name: speed up APT downloads, take 2
+      lineinfile: dest=/etc/apt/sources.list line='deb http://us-west-1.ec2.archive.ubuntu.com/ubuntu/ {{ item }} main restricted universe multiverse' insertbefore=BOF regexp='http://us-west-1.ec2.archive.ubuntu.com/ubuntu/ {{ item }}'
+      with_items:
+        - "{{ ansible_distribution_release }}"
+        - "{{ ansible_distribution_release }}-updates"
+        - "{{ ansible_distribution_release }}-security"
     - name: install necessary packages
       apt: update_cache=yes pkg=linux-image-extra-virtual,dkms,ubuntu-desktop,audacity,git,sox,vlc,lame,libid3-tools,sonic-visualiser
     - name: install virtualbox packages
