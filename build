@@ -11,7 +11,6 @@ unset cleanup_mountpoint
 unset cleanup_partition1
 unset cleanup_lodev
 unset cleanup_bad_ova
-unset cleanup_sparse_img
 unset cleanup_dest_img
 unset cleanup_ovf
 unset cleanup_original_image
@@ -46,10 +45,6 @@ cleanup() {
     [ -z "$cleanup_dest_img" ] || {
         rm -f "$cleanup_dest_img"
         unset cleanup_dest_img
-    }
-    [ -z "$cleanup_sparse_img" ] || {
-        rm -f "$cleanup_sparse_img"
-        unset cleanup_sparse_img
     }
     [ -z "$cleanup_ovf" ] || {
         rm -f "$cleanup_ovf"
@@ -239,13 +234,11 @@ cleanup_ovf="$targetdir"/dts-publishingstudio-13.10-amd64.ovf
 pushd "$targetdir" > /dev/null
 
 #create image
-cleanup_sparse_img="$PWD"/dts-publishingstudio-13.10-amd64-disk1.sparsevmdk
-qemu-img convert -S 512 -o subformat=monolithicSparse -O vmdk ubuntu-13.10-server-cloudimg-amd64-disk1.raw dts-publishingstudio-13.10-amd64-disk1.sparsevmdk
 cleanup_dest_img="$PWD"/dts-publishingstudio-13.10-amd64-disk1.vmdk
 # because the next command fails unless I do this
 rm -f dts-publishingstudio-13.10-amd64-disk1.vmdk
 # because of suggestion in https://github.com/ceph/inktank-training-vms/commit/52bc4084e39739e4778a694153b5f8309cdb0b82#diff-a53108f7543b75adbb34afc035d4cdf6R29
-vboxmanage clonehd --format=VMDK --variant=Stream dts-publishingstudio-13.10-amd64-disk1.sparsevmdk dts-publishingstudio-13.10-amd64-disk1.vmdk
+vboxmanage convertfromraw --format=VMDK --variant=Stream ubuntu-13.10-server-cloudimg-amd64-disk1.raw dts-publishingstudio-13.10-amd64-disk1.vmdk
 chmod 644 dts-publishingstudio-13.10-amd64-disk1.vmdk
 
 ovfsum=`sha1sum dts-publishingstudio-13.10-amd64.ovf | cut -d ' ' -f 1`
