@@ -226,13 +226,17 @@ chmod +x "$cleanup_mountpoint"/installbootloader
 #cleanup everything but the lodev
 savedshit="$cleanup_lodev"
 savedshit2="$cleanup_kernels"
+savedshit3="$cleanup_aptcache"
 unset cleanup_lodev
 unset cleanup_kernels
+unset cleanup_aptcache
 cleanup force
 cleanup_lodev="$savedshit"
 cleanup_kernels="$savedshit2"
+cleanup_aptcache="$savedshit3"
 unset savedshit
 unset savedshit2
+unset savedshit3
 
 #install bootloader
 vmuuid=`python -c 'import uuid; print str(uuid.uuid1())'`
