@@ -191,7 +191,7 @@ done
 #write creation of bootloader
 cat > "$cleanup_mountpoint"/installbootloader << EOF
 #!/bin/bash
-
+set -x
 mount / -o remount,rw
 grub-install /dev/sda
 update-grub
@@ -219,7 +219,7 @@ unset savedshit2
 
 #install bootloader
 vmuuid=`python -c 'import uuid; print str(uuid.uuid1())'`
-qemu-system-x86_64 -enable-kvm -name dts-publishingstudio -M pc-1.2 -no-reboot -m 512 -uuid "$vmuuid" -kernel "$cleanup_kernels"/"$kernel" -initrd "$cleanup_kernels"/"$initrd" -append "root=/dev/sda1 ro init=/installbootloader console=ttyS0" -drive file="$lodev",if=none,id=drive-ide0-0-0,format=raw -device ide-hd,bus=ide.0,unit=0,drive=drive-ide0-0-0,id=ide0-0-0,bootindex=1 -nographic -serial /dev/stdout
+qemu-system-x86_64 -enable-kvm -name dts-publishingstudio -M pc-1.2 -no-reboot -m 512 -uuid "$vmuuid" -kernel "$cleanup_kernels"/"$kernel" -initrd "$cleanup_kernels"/"$initrd" -append "root=/dev/sda1 ro quiet init=/installbootloader console=ttyS0" -drive file="$lodev",if=none,id=drive-ide0-0-0,format=raw -device ide-hd,bus=ide.0,unit=0,drive=drive-ide0-0-0,id=ide0-0-0,bootindex=1 -nographic -serial /dev/stdout
 chkdsk "$lodev"p1
 
 if [ -z "$NOZEROFREE" ] ; then
