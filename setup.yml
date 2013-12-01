@@ -6,12 +6,11 @@
     - name: add hostname to hosts file
       lineinfile: dest=/etc/hosts regexp=publishingstudio.declinefm.com line='127.0.0.2 publishingstudio.declinefm.com publishingstudio'
     - name: speed up APT downloads
-      lineinfile: dest=/etc/apt/sources.list line='deb mirror://mirrors.ubuntu.com/mirrors.txt {{ item }} main restricted universe multiverse' insertbefore=BOF
+      lineinfile: dest=/etc/apt/sources.list line='deb mirror://mirrors.ubuntu.com/mirrors.txt {{ item }} main restricted universe multiverse' insertbefore=BOF regexp='mirror://mirrors.ubuntu.com/mirrors.txt {{ item }}'
       with_items:
-        - {{ ansible_distribution_release }}
-        - {{ ansible_distribution_release }}-updates
-        - {{ ansible_distribution_release }}-backports
-        - {{ ansible_distribution_release }}-security
+        - "{{ ansible_distribution_release }}"
+        - "{{ ansible_distribution_release }}-updates"
+        - "{{ ansible_distribution_release }}-security"
     - name: install necessary packages
       apt: update_cache=yes pkg=linux-image-extra-virtual,dkms,ubuntu-desktop,audacity,git,sox,vlc,lame,libid3-tools,sonic-visualiser
     - name: install virtualbox packages
