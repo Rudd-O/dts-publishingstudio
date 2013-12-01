@@ -15,7 +15,7 @@
       apt: update_cache=yes pkg=linux-image-extra-virtual,dkms,ubuntu-desktop,audacity,git,sox,vlc,lame,libid3-tools,sonic-visualiser
     - name: install virtualbox packages
       apt: pkg=virtualbox-guest-x11,virtualbox-guest-utils,virtualbox-guest-dkms
-    - name: create ${item} link for virtualbox-guest-x11
+    - name: create {{ item }} link for virtualbox-guest-x11
       file: state=link src=/etc/init.d/virtualbox-guest-x11 dest=/etc/{{ item }}/S21virtualbox-guest-x11
       with_items:
         - rc2.d
@@ -37,18 +37,18 @@
       shell: creates=/var/swap dd if=/dev/zero of=/var/swap bs=1M count=0 seek=2048 && chmod 700 /var/swap && mkswap /var/swap
     - name: add swap file to fstab
       lineinfile: dest=/etc/fstab regexp=^/var/swap line='/var/swap none swap defaults 0 0'
-    - name: create ${item} directory
+    - name: create {{ item }} directory
       file: owner=ubuntu group=ubuntu dest=/home/ubuntu/{{ item }} state=directory mode=0755
       with_items:
         - Studio
         - Studio/Recordings
         - Studio/Clips
-    - name: add ${item} local directory to Nautilus bookmarks
+    - name: add {{ item }} local directory to Nautilus bookmarks
       lineinfile: owner=ubuntu group=ubuntu dest=/home/ubuntu/.gtk-bookmarks regexp='Local {{ item }}' line='file:///home/ubuntu/Studio/{{ item }} Local {{ item }}' create=yes
       with_items:
         - Recordings
         - Clips
-    - name: add ${item} remote directory to Nautilus bookmarks
+    - name: add {{ item }} remote directory to Nautilus bookmarks
       lineinfile: owner=ubuntu group=ubuntu dest=/home/ubuntu/.gtk-bookmarks regexp='Server {{ item }}' line='sftp://ubuntu@studio.declinefm.com/home/ubuntu/Studio/{{ item }} Server {{ item }}' create=yes
       with_items:
         - Recordings
