@@ -57,5 +57,3 @@
       shell: sudo -H -u ubuntu /usr/local/bin/reset-unity-launcher
       register: reset_launcher_icons
       changed_when: reset_launcher_icons.stdout.find("configuration changed") != -1
-    - name: clear apt cache
-      shell: apt-get clean

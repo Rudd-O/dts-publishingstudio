@@ -6,6 +6,8 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 set -e
 
 unset cleanup_kernels
+unset cleanup_aptcache
+unset cleanup_mountpoint_aptcache
 unset cleanup_mountpoint_proc
 unset cleanup_mountpoint
 unset cleanup_partition1
@@ -21,6 +23,14 @@ cleanup() {
     [ -z "$cleanup_kernels" ] || {
         rm -rf "$cleanup_kernels"
         unset cleanup_kernels
+    }
+    [ -z "$cleanup_mountpoint_aptcache" ] || {
+        umount "$cleanup_mountpoint_aptcache"
+        unset cleanup_mountpoint_aptcache
+    }
+    [ -z "$cleanup_aptcache" ] || {
+        rm -rf "$cleanup_aptcache"
+        unset cleanup_aptcache
     }
     [ -z "$cleanup_mountpoint_proc" ] || {
         umount "$cleanup_mountpoint_proc"
@@ -150,6 +160,12 @@ mountpoint -q partition1 || mount "$lodev"p1 partition1
 cleanup_mountpoint="$PWD"/partition1
 mountpoint -q partition1/proc || mount -t proc proc partition1/proc
 cleanup_mountpoint_proc="$PWD"/partition1/proc
+
+#create apt cache directory
+mkdir -p "$PWD"/aptcache
+cleanup_aptcache="$PWD"/aptcache
+mountpoint -q "$cleanup_mountpoint"/var/cache/apt || mount --bind "$cleanup_aptcache" "$cleanup_mountpoint"/var/cache/apt
+cleanup_mountpoint_aptcache="$PWD"/var/cache/apt
 
 popd > /dev/null
 
