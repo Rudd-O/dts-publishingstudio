@@ -6,12 +6,6 @@
     - name: add hostname to hosts file
       lineinfile: dest=/etc/hosts regexp=publishingstudio.declinefm.com line='127.0.0.2 publishingstudio.declinefm.com publishingstudio'
     - name: speed up APT downloads
-      lineinfile: dest=/etc/apt/sources.list line='deb mirror://mirrors.ubuntu.com/mirrors.txt {{ item }} main restricted universe multiverse' insertbefore=BOF regexp='mirror://mirrors.ubuntu.com/mirrors.txt {{ item }}'
-      with_items:
-        - "{{ ansible_distribution_release }}"
-        - "{{ ansible_distribution_release }}-updates"
-        - "{{ ansible_distribution_release }}-security"
-    - name: speed up APT downloads, take 2
       lineinfile: dest=/etc/apt/sources.list line='deb http://us-west-1.ec2.archive.ubuntu.com/ubuntu/ {{ item }} main restricted universe multiverse' insertbefore=BOF regexp='http://us-west-1.ec2.archive.ubuntu.com/ubuntu/ {{ item }}'
       with_items:
         - "{{ ansible_distribution_release }}"
