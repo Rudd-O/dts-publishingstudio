@@ -160,7 +160,7 @@ cp -f /etc/resolv.conf "$cleanup_mountpoint"/etc/resolv.conf
 #fool system into believing that shit exists
 fakedir="$cleanup_mountpoint"/fake
 mkdir -p "$fakedir"
-for a in initctl invoke-rc.d restart start stop start-stop-daemon service ; do
+for a in update-initramfs initctl invoke-rc.d restart start stop start-stop-daemon service ; do
     echo "#/bin/bash" | tee "$fakedir"/$a > /dev/null
     chmod +x "$fakedir"/$a
 done
@@ -194,6 +194,7 @@ cat > "$cleanup_mountpoint"/installbootloader << EOF
 set -x
 mount / -o remount,rw
 grub-install /dev/sda
+update-initramfs -c -t -k all
 update-grub
 rm -f /installbootloader
 sync
