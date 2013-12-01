@@ -17,7 +17,7 @@
         - rc4.d
         - rc5.d
     - name: remove undesirable packages
-      apt: pkg=totem,rhythmbox,openssh-server state=purged
+      apt: pkg=totem,rhythmbox,openssh-server state=removed
 # the initial password is simply 'password', lowercase
     - name: create group ubuntu
       group: name=ubuntu
