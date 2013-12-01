@@ -8,9 +8,9 @@
     <Disk ovf:capacity="68719476736" ovf:diskId="vmdisk1" ovf:fileRef="file1" ovf:format="http://www.vmware.com/interfaces/specifications/vmdk.html#streamOptimized" vbox:uuid="c23a75cd-8a54-44eb-9364-ffdee87ddd7a"/>
   </DiskSection>
   <NetworkSection>
-    <Info>The list of logical networks</Info>
-    <Network ovf:name="bridged">
-      <Description>The bridged network</Description>
+    <Info>Logical networks used in the package</Info>
+    <Network ovf:name="NAT">
+      <Description>Logical network used by this appliance.</Description>
     </Network>
   </NetworkSection>
   <VirtualSystem ovf:id="Publishing studio">
@@ -73,9 +73,9 @@
       </Item>
       <Item>
         <rasd:AutomaticAllocation>true</rasd:AutomaticAllocation>
-        <rasd:Caption>Ethernet adapter on 'Bridged'</rasd:Caption>
-        <rasd:Connection>Bridged</rasd:Connection>
-        <rasd:ElementName>Ethernet adapter on 'Bridged'</rasd:ElementName>
+        <rasd:Caption>Ethernet adapter on 'NAT'</rasd:Caption>
+        <rasd:Connection>NAT</rasd:Connection>
+        <rasd:ElementName>Ethernet adapter on 'NAT'</rasd:ElementName>
         <rasd:InstanceID>6</rasd:InstanceID>
         <rasd:ResourceSubType>E1000</rasd:ResourceSubType>
         <rasd:ResourceType>10</rasd:ResourceType>
@@ -164,13 +164,13 @@
         <Network>
           <Adapter slot="0" enabled="true" MACAddress="08002720583E" cable="true" speed="0" type="82540EM">
             <DisabledModes>
-              <NAT>
-                <DNS pass-domain="true" use-proxy="false" use-host-resolver="false"/>
-                <Alias logging="false" proxy-only="false" use-same-ports="false"/>
-              </NAT>
+              <BridgedInterface name="em1"/>
               <InternalNetwork name="intnet"/>
             </DisabledModes>
-            <BridgedInterface name="em1"/>
+            <NAT>
+              <DNS pass-domain="true" use-proxy="false" use-host-resolver="false"/>
+              <Alias logging="false" proxy-only="false" use-same-ports="false"/>
+            </NAT>
           </Adapter>
           <Adapter slot="1" enabled="false" MACAddress="08002718D40F" cable="true" speed="0" type="82540EM">
             <DisabledModes>
