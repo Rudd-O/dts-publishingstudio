@@ -6,7 +6,9 @@
     - name: add hostname to hosts file
       lineinfile: dest=/etc/hosts regexp=publishingstudio.declinefm.com line='127.0.0.2 publishingstudio.declinefm.com publishingstudio'
     - name: install necessary packages
-      apt: update_cache=yes pkg=ubuntu-desktop,audacity,git,sox,vlc,lame,libid3-tools,sonic-visualiser,dkms,virtualbox-guest-x11,virtualbox-guest-utils,virtualbox-guest-dkms
+      apt: update_cache=yes pkg=linux-image-extra-virtual,dkms,ubuntu-desktop,audacity,git,sox,vlc,lame,libid3-tools,sonic-visualiser
+    - name: install virtualbox packages
+      apt: pkg=virtualbox-guest-x11,virtualbox-guest-utils,virtualbox-guest-dkms
     - name: create ${item} link for virtualbox-guest-x11
       file: state=link src=/etc/init.d/virtualbox-guest-x11 dest=/etc/{{ item }}/S21virtualbox-guest-x11
       with_items:
@@ -14,8 +16,6 @@
         - rc3.d
         - rc4.d
         - rc5.d
-    - name: add vboxvideo driver to /etc/modules
-      lineinfile: dest=/etc/modules regexp=vboxvideo line=vboxvideo
     - name: remove undesirable packages
       apt: pkg=totem,rhythmbox,openssh-server state=absent
 # the initial password is simply 'password', lowercase
