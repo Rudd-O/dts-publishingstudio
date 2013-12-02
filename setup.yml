@@ -36,7 +36,7 @@
     - name: create dts-publishingstudio/utils
       file: state=directory dest=/usr/local/dts-publishingstudio/utils
     - name: copy utils there
-      copy: src={{ item }} dest=/usr/local/dts-publishingstudio/utils/{{ item }}
+      copy: mode=0755 src={{ item }} dest=/usr/local/dts-publishingstudio/utils/
       with_fileglob:
       - utils/*
     - name: wire utils directory into path
