@@ -11,6 +11,8 @@
         - "{{ ansible_distribution_release }}"
         - "{{ ansible_distribution_release }}-updates"
         - "{{ ansible_distribution_release }}-security"
+    - name: add latest ansible PPA
+      apt_repository: repo='ppa:rquillo/ansible'
     - name: install necessary packages
       apt: update_cache=yes pkg=linux-image-extra-virtual,dkms,ubuntu-desktop,ansible
     - name: install audio priority file
