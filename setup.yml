@@ -69,3 +69,7 @@
       shell: rm -rf /var/cache/apt/pkgcache* /var/cache/apt/srcpkgcache*
     - name: enable autologin
       copy: src=files/90-autologin.conf dest=/etc/lightdm/lightdm.conf.d/90-autologin.conf
+    - name: remove wrong boot options
+      file: state=absent dest=/etc/default/grub.d/50-cloudimg-settings.cfg
+    - name: set right boot options
+      copy: src=files/50-studio-settings.cfg dest=/etc/default/grub.d/50-studio-settings.cfg
