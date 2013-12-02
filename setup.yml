@@ -71,8 +71,9 @@
       lineinfile: dest=/home/ubuntu/.audacity-data/audacity.cfg
                   regexp='{{ item.regexp }}'
                   line='{{ item.line }}'
+                  insertafter='{{ item.insertafter }}'
       with_items:
-      - { insertafter: '',        regexp: '.AudioIO.', line: '[AudioIO]' }
+      - { insertafter: '^',        regexp: '.AudioIO.', line: '[AudioIO]' }
       - { insertafter: 'AudioIO', regexp: '^RecordingDevice', line: 'RecordingDevice=system' }
       - { insertafter: 'AudioIO', regexp: '^PlaybackDevice', line: 'PlaybackDevice=system' }
       - { insertafter: 'AudioIO', regexp: '^Host', line: 'Host=JACK Audio Connection Kit' }
