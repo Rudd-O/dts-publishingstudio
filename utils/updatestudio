@@ -1,3 +1,20 @@
 #!/bin/bash
 
-echo "This script does nothing for the time being"
+set -e
+
+unset CDPATH
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+if [ "$UID" != "0" ] ; then
+    exec sudo -H "$DIR"/`basename "${BASH_SOURCE[0]}"` "$@"
+fi
+
+echo "This script will upgrade your studio utilities to the latest version" >&2
+
+cd "$DIR"
+cd ..
+rm -rf update
+git clone https://github.com/Rudd-O/dts-publishingstudio update
+cd update
+
+ANSIBLE_NOCOWS=1 ansible-playbook -c local ./setup.yml
