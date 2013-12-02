@@ -17,7 +17,7 @@ rm -rf update
 git clone https://github.com/Rudd-O/dts-publishingstudio update
 cd update
 
-ANSIBLE_NOCOWS=1 ansible-playbook -c local ./setup.yml
+ANSIBLE_NOCOWS=1 ansible-playbook -c local -i localhost, ./setup.yml
 
 cd ..
 rm -rf update
