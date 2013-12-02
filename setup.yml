@@ -14,7 +14,7 @@
     - name: install necessary packages
       apt: update_cache=yes pkg=linux-image-extra-virtual,dkms,ubuntu-desktop,ansible
     - name: install audio suite
-      apt: pkg=audacity,git,sox,vlc,lame,libid3-tools,sonic-visualiser
+      apt: pkg=audacity,git,sox,vlc,lame,libid3-tools,sonic-visualiser,paman
     - name: install virtualbox packages
       apt: pkg=virtualbox-guest-x11,virtualbox-guest-utils,virtualbox-guest-dkms
     - name: create {{ item }} link for virtualbox-guest-x11
