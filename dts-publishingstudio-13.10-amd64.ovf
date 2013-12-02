@@ -4,7 +4,7 @@
     <File ovf:href="dts-publishingstudio-13.10-amd64-disk1.vmdk" ovf:id="file1"/>
   </References>
   <DiskSection>
-    <Info>Virtual disk information</Info>
+    <Info>List of the virtual disks used in the package</Info>
     <Disk ovf:capacity="68719476736" ovf:diskId="vmdisk1" ovf:fileRef="file1" ovf:format="http://www.vmware.com/interfaces/specifications/vmdk.html#streamOptimized" vbox:uuid="c23a75cd-8a54-44eb-9364-ffdee87ddd7a"/>
   </DiskSection>
   <NetworkSection>
