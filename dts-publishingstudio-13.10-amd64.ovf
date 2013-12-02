@@ -238,7 +238,7 @@
           <Port slot="1" enabled="false" IOBase="0x378" IRQ="7"/>
         </LPT>
         <AudioAdapter controller="AC97" driver="Pulse" enabled="true"/>
-        <RTC localOrUTC="local"/>
+        <RTC localOrUTC="UTC"/>
         <SharedFolders/>
         <Clipboard mode="Disabled"/>
         <DragAndDrop mode="Disabled"/>
