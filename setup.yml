@@ -69,7 +69,6 @@
              sudo -H -u ubuntu touch /home/ubuntu/.audacity-data/audacity.cfg
     - name: set up audacity config
       lineinfile: dest=/home/ubuntu/.audacity-data/audacity.cfg
-                  insertafter={{ item.insertafter }}
                   regexp='{{ item.regexp }}'
                   line='{{ item.line }}'
       with_items:
