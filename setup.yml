@@ -65,12 +65,16 @@
     - name: install jack config
       copy: owner=ubuntu group=ubuntu src=files/conf.xml dest=/home/ubuntu/.config/jack/conf.xml
     - name: set up audacity config
-      ini_file: owner=ubuntu group=ubuntu dest=/home/ubuntu/.audacity-data/audacity.cfg
-                section={{ item.section }} option={{ item.option }} value='{{ item.value }}'
+      lineinfile: create=yes owner=ubuntu group=ubuntu state=present
+                  dest=/home/ubuntu/.audacity-data/audacity.cfg
+                  insertafter={{ item.insertafter }}
+                  regexp='{{ item.regexp }}'
+                  line='{{ item.line }}'
       with_items:
-      - { section: 'AudioIO', option: 'RecordingDevice', value: 'system' }
-      - { section: 'AudioIO', option: 'PlaybackDevice', value: 'system' }
-      - { section: 'AudioIO', option: 'Host', value: 'JACK Audio Connection Kit' }
+      - { insertafter: '',        regexp: '.AudioIO.', line: '[AudioIO]' }
+      - { insertafter: 'AudioIO', regexp: '^RecordingDevice', line: 'RecordingDevice=system' }
+      - { insertafter: 'AudioIO', regexp: '^PlaybackDevice', line: 'PlaybackDevice=system' }
+      - { insertafter: 'AudioIO', regexp: '^Host', line: 'Host=JACK Audio Connection Kit' }
     - name: copy chains to audacity chains dir
       copy: mode=0644 owner=ubuntu group=ubuntu
             src={{ item }} dest=/home/ubuntu/.audacity-data/Chains/
