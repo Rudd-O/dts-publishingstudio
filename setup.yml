@@ -29,10 +29,16 @@
       group: name=ubuntu
     - name: create user ubuntu
       user: name=ubuntu comment='Show publisher' group=ubuntu groups=admin shell=/bin/bash update_password=on_create password='$6$xBdsWlF/$G9zAtal56nQ9LO8kMnIsZNe223djh7./9Nu5MSd34qZAuwBAycfD/wlCP4G9jYW/y9yuuNEs3CV5yH5EvQVG31'
-    - name: clone publishing studio repository
-      git: repo=https://github.com/Rudd-O/dts-publishingstudio dest=/usr/local/dts-publishingstudio
-    - name: wire repository up into path
-      copy: src=files/studio.sh dest=/etc/profile.d/studio.sh
+    - name: create dts-publishingstudio
+      file: state=directory dest=/usr/local/dts-publishingstudio
+    - name: create dts-publishingstudio/utils
+      file: state=directory dest=/usr/local/dts-publishingstudio/utils
+    - name: copy utils there
+      copy: src={{ item }} dest=/usr/local/dts-publishingstudio/utils/{{ item }}
+      with_fileglob:
+      - utils/*
+    - name: wire utils directory into path
+      file: state=link src=/usr/local/dts-publishingstudio/studio.sh dest=/etc/profile.d/studio.sh
     - name: create swap files
       shell: creates=/var/swap dd if=/dev/zero of=/var/swap bs=1M count=2048 && chmod 700 /var/swap && mkswap /var/swap
     - name: add swap file to fstab
@@ -57,10 +63,8 @@
       file: owner=ubuntu group=ubuntu dest=/home/ubuntu/.ssh state=directory mode=0700
     - name: add studio to known_hosts
       lineinfile: owner=ubuntu group=ubuntu dest=/home/ubuntu/.ssh/known_hosts create=yes mode=0600 regexp='studio.declinefm.com' line='studio.declinefm.com,184.73.165.116 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDoDZ789FU010XtTmqzn0E6aQUKH+gyykkLnoRUDn/l+oZY4T/S+ns7kuMzYiJvaMfyPCyQ5Jz57BAVXpoI/NQS/G6sNowMg+P3/i/QLRrm06pJK9hTjc1fiALtmcYn7FLCdM285s811Go0WA7gTW/Vn+ZgDSe5bEbnjQot4AfPSH2DTT5pYDsKhwIFi2CSjgI66c8prOdyrsy9a0j2zDyJ7NTj7JQ4EEisxEaKCE1L49VXVbIrcBBPpPqR9c8BzxgzPlR6uruZTqCG0lqFVEeN/3TqvpfNB/XmUiDC4cSrKIAASmb40Hiloo1TwFsjh4M7K655QmOCGeRYUzfJiX5r'
-    - name: deploy unity launcher icons
-      copy: src=files/reset-unity-launcher dest=/usr/local/bin/reset-unity-launcher mode=0755
-    - name: reset unity launcher icons
-      shell: sudo -H -u ubuntu /usr/local/bin/reset-unity-launcher
+    - name: reset desktop settings and unity launcher icons
+      shell: sudo -H -u ubuntu /usr/local/dts-publishingstudio/utils/reset-desktop-settings
       register: reset_launcher_icons
       changed_when: reset_launcher_icons.stdout.find("configuration changed") != -1
     - name: empty apt lists

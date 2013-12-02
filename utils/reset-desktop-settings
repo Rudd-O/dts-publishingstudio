@@ -25,6 +25,13 @@ else
     updated=yes
 fi
 
+if gsettings get org.gnome.desktop.screensaver lock-enabled | grep -q false ; then
+    true # nothing to do
+else
+    gsettings set org.gnome.desktop.screensaver lock-enabled false
+    updated=yes
+fi
+
 if [ -n "$updated" ] ; then
     echo "configuration changed"
 fi
