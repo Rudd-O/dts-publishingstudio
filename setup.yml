@@ -15,10 +15,10 @@
       apt_repository: repo='ppa:rquillo/ansible'
     - name: install necessary packages
       apt: update_cache=yes pkg=linux-image-extra-virtual,dkms,ubuntu-desktop,ansible
-    - name: install audio priority file
-      copy: src=files/audio.conf dest=/etc/security/limits.d/audio.conf
     - name: install audio suite
       apt: pkg=audacity,git,sox,vlc,lame,libid3-tools,sonic-visualiser,paman,jackd2,qjackctl,pulseaudio-module-jack
+    - name: install audio priority file
+      copy: src=files/audio.conf dest=/etc/security/limits.d/audio.conf
     - name: install jack control starter
       copy: src=files/jackcontrol.desktop dest=/etc/xdg/autostart/jackcontrol.desktop
     - name: install virtualbox packages
