@@ -1,0 +1,2 @@
+TruncateSilence: Db="-40 dB" Minimum=160 Duration=250 Compress=4.000000
+Compressor: Threshold=-36.000000 NoiseFloor=-45.000000 Ratio=4.000000 AttackTime=0.100000 DecayTime=1.000000 Normalize=yes UsePeak=yes
