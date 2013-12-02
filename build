@@ -190,6 +190,11 @@ cp -Rf "$cleanup_mountpoint"/etc/resolv.conf.original "$cleanup_mountpoint"/etc/
 #cleanup the fake stuff
 rm -rf "$fakedir"
 
+#reduce size of image
+rm -rf "$cleanup_mountpoint"/var/lib/apt/lists/*
+rm -rf "$cleanup_mountpoint"/var/cache/apt/pkgcache*
+rm -rf "$cleanup_mountpoint"/var/cache/apt/srcpkgcache*
+
 #get the kernel and initrd out
 mkdir -p "$targetdir"/kernels
 cleanup_kernels="$targetdir"/kernels

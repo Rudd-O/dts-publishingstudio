@@ -113,10 +113,6 @@
       shell: sudo -H -u ubuntu /usr/local/dts-publishingstudio/utils/reset-desktop-settings
       register: reset_launcher_icons
       changed_when: reset_launcher_icons.stdout.find("configuration changed") != -1
-    - name: empty apt lists
-      shell: rm -rf /var/lib/apt/lists/*
-    - name: clear apt cache (except for files)
-      shell: rm -rf /var/cache/apt/pkgcache* /var/cache/apt/srcpkgcache*
     - name: enable autologin
       copy: src=files/90-autologin.conf dest=/etc/lightdm/lightdm.conf.d/90-autologin.conf
     - name: remove wrong boot options
