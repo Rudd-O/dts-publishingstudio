@@ -65,7 +65,8 @@
     - name: install jack config
       copy: owner=ubuntu group=ubuntu src=files/conf.xml dest=/home/ubuntu/.config/jack/conf.xml
     - name: create audacity config
-      copy: owner=ubuntu group=ubuntu dest=/home/ubuntu/.audacity-data/audacity.cfg
+      shell: creates=/home/ubuntu/.audacity-data/audacity.cfg
+             sudo -H -u ubuntu touch /home/ubuntu/.audacity-data/audacity.cfg
     - name: set up audacity config
       lineinfile: dest=/home/ubuntu/.audacity-data/audacity.cfg
                   insertafter={{ item.insertafter }}
