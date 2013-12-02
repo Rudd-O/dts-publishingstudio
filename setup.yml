@@ -13,8 +13,12 @@
         - "{{ ansible_distribution_release }}-security"
     - name: install necessary packages
       apt: update_cache=yes pkg=linux-image-extra-virtual,dkms,ubuntu-desktop,ansible
+    - name: install audio priority file
+      copy: src=files/audio.conf dest=/etc/security/limits.d/audio.conf
     - name: install audio suite
-      apt: pkg=audacity,git,sox,vlc,lame,libid3-tools,sonic-visualiser,paman
+      apt: pkg=audacity,git,sox,vlc,lame,libid3-tools,sonic-visualiser,paman,jackd2,qjackctl,pulseaudio-module-jack
+    - name: install jack control starter
+      copy: src=files/jackcontrol.desktop dest=/etc/xdg/autostart/jackcontrol.desktop
     - name: install virtualbox packages
       apt: pkg=virtualbox-guest-x11,virtualbox-guest-utils,virtualbox-guest-dkms
     - name: create {{ item }} link for virtualbox-guest-x11
@@ -26,11 +30,15 @@
         - rc5.d
     - name: remove undesirable packages
       apt: pkg=totem,rhythmbox,openssh-server,cloud-init state=absent purge=yes
+    - name: create swap files
+      shell: creates=/var/swap dd if=/dev/zero of=/var/swap bs=1M count=2048 && chmod 700 /var/swap && mkswap /var/swap
+    - name: add swap file to fstab
+      lineinfile: dest=/etc/fstab regexp=^/var/swap line='/var/swap none swap defaults 0 0'
 # the initial password is simply 'password', lowercase
     - name: create group ubuntu
       group: name=ubuntu
     - name: create user ubuntu
-      user: name=ubuntu comment='Show publisher' group=ubuntu groups=admin shell=/bin/bash update_password=on_create password='$6$xBdsWlF/$G9zAtal56nQ9LO8kMnIsZNe223djh7./9Nu5MSd34qZAuwBAycfD/wlCP4G9jYW/y9yuuNEs3CV5yH5EvQVG31'
+      user: name=ubuntu comment='Show publisher' group=ubuntu groups=admin,audio shell=/bin/bash update_password=on_create password='$6$xBdsWlF/$G9zAtal56nQ9LO8kMnIsZNe223djh7./9Nu5MSd34qZAuwBAycfD/wlCP4G9jYW/y9yuuNEs3CV5yH5EvQVG31'
     - name: create dts-publishingstudio
       file: state=directory dest=/usr/local/dts-publishingstudio
     - name: create dts-publishingstudio/utils
@@ -41,16 +49,30 @@
       - utils/*
     - name: wire utils directory into path
       file: state=link src=/usr/local/dts-publishingstudio/utils/studio.sh dest=/etc/profile.d/studio.sh
-    - name: create swap files
-      shell: creates=/var/swap dd if=/dev/zero of=/var/swap bs=1M count=2048 && chmod 700 /var/swap && mkswap /var/swap
-    - name: add swap file to fstab
-      lineinfile: dest=/etc/fstab regexp=^/var/swap line='/var/swap none swap defaults 0 0'
     - name: create {{ item }} directory
       file: owner=ubuntu group=ubuntu dest=/home/ubuntu/{{ item }} state=directory mode=0755
       with_items:
         - Studio
         - Studio/Recordings
         - Studio/Clips
+        - .config
+        - .config/rncbc.org
+        - .config/jack
+    - name: install jack config
+      copy: owner=ubuntu group=ubuntu src=files/conf.xml dest=/home/ubuntu/.config/jack/conf.xml
+    - name: set up qjackctl config
+      ini_file: owner=ubuntu group=ubuntu dest=/home/ubuntu/.config/rncbc.org/QJackCtl.conf
+                section={{ item.section }} option={{ item.option }} value={{ item.value }}
+      with_items:
+      - { section: 'Settings', option: 'Server', value: '/usr/bin/jackd' }
+      - { section: 'Settings', option: 'Realtime', value: 'true' }
+      - { section: 'Settings', option: 'NoMemLock', value: 'false' }
+      - { section: 'Settings', option: 'Frames', value: '1024' }
+      - { section: 'Settings', option: 'Periods', value: '2' }
+      - { section: 'Settings', option: 'SampleRate', value: '48000' }
+      - { section: 'Settings', option: 'Driver', value: 'alsa' }
+      - { section: 'Settings', option: 'Audio', value: '2' }
+      - { section: 'Options', option: 'DBusEnabled', value: 'true' }
     - name: add {{ item }} local directory to Nautilus bookmarks
       lineinfile: owner=ubuntu group=ubuntu dest=/home/ubuntu/.gtk-bookmarks regexp='Local {{ item }}' line='file:///home/ubuntu/Studio/{{ item }} Local {{ item }}' create=yes
       with_items:

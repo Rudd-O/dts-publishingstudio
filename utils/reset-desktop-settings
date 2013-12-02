@@ -18,10 +18,10 @@ trap cleanup EXIT
 eval `dbus-launch`
 export DBUS_SESSION_BUS_ADDRESS
 
-if gsettings get com.canonical.Unity.Launcher favorites | grep -q audacity ; then
+if gsettings get com.canonical.Unity.Launcher favorites | grep -q paman ; then
     true # nothing to do
 else
-    gsettings set com.canonical.Unity.Launcher favorites "['application://nautilus.desktop', 'application://firefox.desktop', 'application://ubuntu-software-center.desktop', 'application://gnome-control-center.desktop', 'application://gnome-terminal.desktop', 'application://audacity.desktop']"
+    gsettings set com.canonical.Unity.Launcher favorites "['application://nautilus.desktop', 'application://firefox.desktop', 'application://ubuntu-software-center.desktop', 'application://gnome-control-center.desktop', 'application://gnome-terminal.desktop', 'application://audacity.desktop', 'application://paman.desktop', 'application://pavucontrol.desktop', 'application://qjackctl.desktop']"
     updated=yes
 fi
 
