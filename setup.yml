@@ -28,7 +28,7 @@
     - name: create group ubuntu
       group: name=ubuntu
     - name: create user ubuntu
-      user: name=ubuntu comment='Show publisher' group=ubuntu groups=admin shell=/bin/bash update_password=on_create password=$1$SomeSalt$/jbIwfYCu0MxPBND2EtRH.
+      user: name=ubuntu comment='Show publisher' group=ubuntu groups=admin shell=/bin/bash update_password=on_create password='$6$xBdsWlF/$G9zAtal56nQ9LO8kMnIsZNe223djh7./9Nu5MSd34qZAuwBAycfD/wlCP4G9jYW/y9yuuNEs3CV5yH5EvQVG31'
     - name: clone publishing studio repository
       git: repo=https://github.com/Rudd-O/dts-publishingstudio dest=/usr/local/dts-publishingstudio
     - name: wire repository up into path
