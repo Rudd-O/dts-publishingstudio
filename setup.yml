@@ -64,9 +64,10 @@
         - .audacity-data/Chains
     - name: install jack config
       copy: owner=ubuntu group=ubuntu src=files/conf.xml dest=/home/ubuntu/.config/jack/conf.xml
+    - name: create audacity config
+      copy: owner=ubuntu group=ubuntu dest=/home/ubuntu/.audacity-data/audacity.cfg
     - name: set up audacity config
-      lineinfile: create=yes owner=ubuntu group=ubuntu state=present
-                  dest=/home/ubuntu/.audacity-data/audacity.cfg
+      lineinfile: dest=/home/ubuntu/.audacity-data/audacity.cfg
                   insertafter={{ item.insertafter }}
                   regexp='{{ item.regexp }}'
                   line='{{ item.line }}'
