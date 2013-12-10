@@ -5,7 +5,7 @@ set -e
 unset CDPATH
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-[ -n "$STUDIOARCHIVEDIR" ]   || export STUDIOARCHIVEDIR=~/Documents/Studio\ archive
+[ -n "$STUDIOARCHIVEDIR" ]   || { echo '$STUDIOARCHIVEDIR is not defined, exiting' ; exit 40 ; }
 
 for a in "$STUDIOARCHIVEDIR"/Recordings/*.ogg ; do
     test -f "$a" || continue

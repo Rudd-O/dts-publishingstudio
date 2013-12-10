@@ -4,7 +4,7 @@ set -e
 
 [ -f "$1" ] || { echo usage: encodetomp3 filename [num] [yyyy-mm-dd] [aftershow?] ; exit 64 ; }
 
-[ -n "$STUDIOARCHIVEDIR" ]   || export STUDIOARCHIVEDIR=~/Documents/Studio\ archive
+[ -n "$STUDIOARCHIVEDIR" ]   || { echo '$STUDIOARCHIVEDIR is not defined, exiting' ; exit 40 ; }
 [ -n "$SHOWNUMBERREGEXP" ]   || export SHOWNUMBERREGEXP="Decline to State show (\d+)"
 [ -n "$SHOWTITLEPREFIX" ]    || export SHOWTITLEPREFIX="Show #"
 [ -n "$SHOWFILENAMEPREFIX" ] || export SHOWFILENAMEPREFIX="Decline to State show "

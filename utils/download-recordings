@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-[ -n "$STUDIOARCHIVEDIR" ]   || export STUDIOARCHIVEDIR=~/Documents/Studio\ archive
+[ -n "$STUDIOARCHIVEDIR" ]   || { echo '$STUDIOARCHIVEDIR is not defined, exiting' ; exit 40 ; }
 mkdir -p "$STUDIOARCHIVEDIR"
 
 host=`head -1 ~/.studiohosts` || {
