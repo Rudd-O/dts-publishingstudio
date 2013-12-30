@@ -97,11 +97,11 @@
       - { section: 'Settings', option: 'Audio', value: '2' }
       - { section: 'Options', option: 'DBusEnabled', value: 'true' }
     - name: add directory to Nautilus bookmarks
-      lineinfile: owner=ubuntu group=ubuntu dest=/home/ubuntu/{{ item[0] }} regexp='{{ item[1] }} {{ item[2] }}' line='file:///home/ubuntu/Studio/{{ item[2] }} {{ item[1] }} {{ item[2] }}' create=yes
+      lineinfile: owner=ubuntu group=ubuntu dest=/home/ubuntu/{{ item[0] }} regexp='{{ item[2] }} {{ item[1] }}' line='file:///home/ubuntu/Studio/{{ item[1] }} {{ item[2] }} {{ item[1] }}' create=yes
       with_nested:
         - ['.gtk-bookmarks', '.config/gtk-3.0/bookmarks']
-        - ['Local', 'Server']
         - ['Recordings', 'Clips', 'Shows']
+        - ['Local', 'Server']
       when: item[1] + item[2] != "RemoteShows"
     - name: create .ssh directory
       file: owner=ubuntu group=ubuntu dest=/home/ubuntu/.ssh state=directory mode=0700
