@@ -102,7 +102,7 @@
         - ['.gtk-bookmarks', '.config/gtk-3.0/bookmarks']
         - ['Recordings', 'Clips', 'Shows']
         - ['Local', 'Server']
-      when: item[1] + item[2] != "RemoteShows"
+      when: item[2] + item[1] != "ServerShows"
     - name: create .ssh directory
       file: owner=ubuntu group=ubuntu dest=/home/ubuntu/.ssh state=directory mode=0700
     - name: add studio to known_hosts
