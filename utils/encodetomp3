@@ -16,7 +16,7 @@ if [ -n "$4" ] ; then export AFTERSHOW=1 ; fi
 shortdate=`date "+%Y-%m-%d"`
 if [ -n "$3" ] ; then shortdate="$3" ; fi
 
-enddir="$STUDIOARCHIVEDIR"/"$shortdate"
+enddir="$STUDIOARCHIVEDIR"/Shows/"$shortdate"
 
 if [ -n "$2" ] ; then
     shownum="$2"
