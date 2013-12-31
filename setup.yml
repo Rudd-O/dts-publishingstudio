@@ -50,7 +50,7 @@
       with_fileglob:
       - utils/*
     - name: allow updatestudio to run by administrator
-      copy: src=files/updatestudio.sudoers dest=/etc/sudoers/updatestudio mode=0440
+      copy: src=files/updatestudio.sudoers dest=/etc/sudoers.d/updatestudio mode=0440
     - name: wire utils directory into path
       file: state=link src=/usr/local/dts-publishingstudio/utils/studio.sh dest=/etc/profile.d/studio.sh
     - name: create {{ item }} directory
