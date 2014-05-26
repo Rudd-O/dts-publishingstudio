@@ -10,13 +10,13 @@
       <pattern>*.mp3</pattern>
     </patterns>
   </object>
-  <object class="GtkWindow" id="window1">
+  <object class="GtkWindow" id="window">
     <property name="can_focus">False</property>
     <property name="border_width">5</property>
     <property name="title" translatable="yes">Upload Shows</property>
     <property name="default_width">600</property>
     <property name="default_height">400</property>
-    <signal name="destroy" handler="gtk_main_quit" swapped="no"/>
+    <signal name="destroy" handler="onDestroy" swapped="no"/>
     <child>
       <object class="GtkBox" id="box1">
         <property name="visible">True</property>
